@@ -1,0 +1,11 @@
+{
+    "host": "0.0.0.0",
+    "port": 80,
+    "db": {
+        "host": "localhost",
+        "username": "root",
+        "database": "anketa",
+        "password": "",
+        "port": 3306 
+    }
+}
