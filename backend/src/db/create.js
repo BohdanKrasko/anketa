@@ -34,18 +34,16 @@ exports.section = async (data) => {
 }
 
 exports.question = async (data) => {
-    for (const value of data.questions) {
-
-        conn.query("INSERT INTO \
+    await data.questions.reduce(async (memo, value) => {
+        await memo;
+        await conn.query("INSERT INTO \
             question (question, section_id) \
         VALUES \
             (?,?); \
         ", [value.question, value.section_id]).then(() => {
             return conn.query("SELECT question_id FROM question ORDER BY question_id DESC LIMIT 1;")
         }).then((data) => {
-            
             const question_id = data[0][0].question_id;
-            
             for (const v of value.answers) {
                 conn.query("INSERT INTO \
                     list_of_answers (name_of_answer, question_id) \
@@ -54,9 +52,8 @@ exports.question = async (data) => {
                         console.log(err);
                     })
                 }
-            }
-        );
-    }
+            })       
+    }, undefined);
 }
 
 exports.userAnswer = async (data) => {

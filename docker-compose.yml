@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mysql:
+    # image: mysql/mysql-server:8
+    image: mysql/mysql-server:latest-aarch64
+    container_name: db_anketa
+    ports:
+      - 3306
+    volumes:
+      - ./db/dump.sql:/docker-entrypoint-initdb.d/anketa.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: anketa
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    networks:
+      - backend
+
+  backend:
+    build: backend
+    container_name: backend_anketa
+    ports:
+      - 8000:8000
+    depends_on: 
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+networks:
+    backend:
+        driver: bridge

@@ -1,24 +1,25 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { login } from '../../api/client';
+import { useHistory } from "react-router-dom";
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="http://irc.dubredu.rv.ua/">
+        Дубровийьки ІРЦ
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -28,17 +29,60 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+const SignIn = (props) => {
+  const history = useHistory();
+
+  const [state, setState] = useState({
+    username: false,
+    password: false,
+    onFailure: false
+  });
+
+  const handleInputChange = (name, value) => {
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const checkFields = (user) => {
+    for (const val in user) {
+      if (!user[val]) {
+        handleInputChange(val, true)
+        return false;
+      } else {
+        handleInputChange(val, false)
+      }
+    }
+    return true;
+  }
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
+    const user = {
+      username: data.get('username'),
       password: data.get('password'),
-    });
-  };
-
+    };
+    if (checkFields(user)) {
+      login(user)
+        .then(response => response.json())
+        .then((data) => {
+          if (!data.parents_id) {
+            throw Error("User not found")
+          }
+          history.push({ 
+            pathname: '/ankety',
+            state: data
+           })
+      }).catch(() => {
+        setState({onFailure: true})
+      })
+    }
+  }
+ 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -52,53 +96,45 @@ export default function SignIn() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            {/* <LockOutlinedIcon /> */}
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Ваш логін"
+              name="username"
+              autoComplete="off"
               autoFocus
+              error={state.username}
             />
             <TextField
               margin="normal"
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Ваш пароль"
               type="password"
               id="password"
               autoComplete="current-password"
+              error={state.password}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <Collapse in={state.onFailure}>
+              <Alert severity="error">Невірний логін або пароль</Alert>
+            </Collapse>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Увійти
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+            <Grid container direction="row-reverse">
+              <Grid item> 
+                <Link href="/signup" variant="body2">
+                  {"Не маєте акаунта? Зареєструватися"}
                 </Link>
               </Grid>
             </Grid>
@@ -109,3 +145,5 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
+
+export default SignIn
