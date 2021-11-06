@@ -8,9 +8,9 @@ RUN npm install
 
 COPY public public/
 COPY src src/
-
-RUN npm run build
+ENV PORT=80
+RUN npm run build 
 RUN yarn global add serve
 
-EXPOSE 3000
+EXPOSE 80
 CMD serve -s build
