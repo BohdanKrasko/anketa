@@ -2,8 +2,8 @@ version: '3'
 
 services:
   mysql:
-    # image: mysql/mysql-server:8
-    image: mysql/mysql-server:latest-aarch64
+    image: mysql/mysql-server:8.0
+    # image: mysql/mysql-server:latest-aarch64
     container_name: db_anketa
     ports:
       - 3306
