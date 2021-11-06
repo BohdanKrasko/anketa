@@ -89,7 +89,6 @@ const EditAnketa = (props) => {
         event.preventDefault();
         const dataJSON = genereteJson()
         editAnketa(dataJSON, data.token)
-        // console.log(data)
         history.push({ 
             pathname: '/ankety',
             state: data
@@ -162,9 +161,6 @@ const EditAnketa = (props) => {
         }
         addAnketaState(newAnketa)
     } 
-    // console.log(section)
-    // console.log(question)
-    // console.log(genereteJson())
 
     const addAnketaState = (newData) => {
         let dataToAdd = [...anketa];

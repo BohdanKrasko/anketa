@@ -89,7 +89,6 @@ const SignUp = (props) => {
       register(user)
       .then(response => response.json())
       .then((data) => {
-        // console.log(data) 
         if (data.status_code === 200) {
           setState({isSuccess: true, isAlert: false})
         } else {

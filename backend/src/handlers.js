@@ -212,7 +212,6 @@ let handlers = {
                         "phone_number": request.payload.phone_number,
                         "email"       : request.payload.email
                     }
-                    // console.log("create user: ", JSON.stringify(request.payload));
                     return create.user(data).then(() => {
                         return reply.response({status_code: 200});
                     })
@@ -249,9 +248,7 @@ let handlers = {
                         "category": request.payload.category,
                         "sections": request.payload.sections,
                     }
-                    // console.log("create anketa: ", typeof(request.payload));
                     return anketa.create(data).then((res) => {
-                        // console.log(res)
                         return reply.response(res);
                     })
                 },
@@ -284,7 +281,6 @@ let handlers = {
                     const data = {
                         "sections": request.payload.sections
                     }
-                    // console.log("create section: ", JSON.stringify(request.payload));
                     return create.section(data).then(() => {
                         return reply.response({status_code: 200});
                     })
@@ -298,7 +294,6 @@ let handlers = {
                     const data = {
                         "questions": request.payload.questions
                     }
-                    // console.log("create section: ", JSON.stringify(request.payload));
                     return create.question(data).then(() => {
                         return reply.response({status_code: 200});
                     })

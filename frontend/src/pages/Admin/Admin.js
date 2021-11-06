@@ -63,7 +63,6 @@ const Admin = (props) => {
         getAdmins(request)
             .then(res => res.json())
             .then(res => {
-                console.log(res)
                 setAdmins(res)
                 setIsAuthorized(true)
                 setLoading(false)

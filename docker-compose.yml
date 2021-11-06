@@ -15,10 +15,10 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     networks:
-      - backend
+      - irc_anketa
 
   backend:
-    build: backend
+    image: kraskobohdan/irc:backend
     container_name: backend_anketa
     ports:
       - 8000:8000
@@ -26,7 +26,18 @@ services:
       mysql:
         condition: service_healthy
     networks:
+      - irc_anketa
+
+  frontend:
+    image: kraskobohdan/irc:frontend
+    container_name: frontend_anketa
+    ports:
+      - 3000:3000
+    depends_on: 
       - backend
+    networks:
+      - irc_anketa
+
 networks:
-    backend:
+    irc_anketa:
         driver: bridge

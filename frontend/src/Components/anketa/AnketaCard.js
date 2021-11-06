@@ -37,7 +37,6 @@ export default function AnketaCard({
             <Card >
                     <CardHeader
                         action={
-                            // <IconButton onClick={() => {console.log("Delete anketa")}}>
                             <Box>
                                 { parents.role === 'admin' ? 
                                     <div>

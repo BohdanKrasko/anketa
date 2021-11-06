@@ -22,7 +22,6 @@ const App = (props) => {
     }
   });
   const data = (props.location && props.location.state) || {};
-  // console.log(data)
 
   const classes = useStyles();
   const [state, setState] = useState({
@@ -36,8 +35,6 @@ const App = (props) => {
       pathname: '/ankety',
       state: data
      })
-     console.log(data)
-     console.log("data")
   }
   
   

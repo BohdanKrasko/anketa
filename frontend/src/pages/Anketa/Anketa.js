@@ -28,7 +28,6 @@ const Anketa = (props) => {
     const descriptionElementRef = React.useRef(null);
     const history = useHistory();
 
-    // console.log(data)
     useEffect(() => {
         try {
             verify(data.token, 'TOKEN_KEY')
@@ -37,7 +36,6 @@ const Anketa = (props) => {
                 .then(res => res.json())
                 .then(data => {
                     setAnketa(data)
-                    // console.log(data)
                     setLoading(false)
                 })
         } catch (err) {

@@ -212,7 +212,6 @@ const Profile = (props) => {
                 .then(res => {
                     let newState = state
                     if (!res.exist) {
-                        console.log('edit')
                         editUser(updateUser)
                         handleOpenS('success', 'Дані успішно оновлено')
                         newState.isUsername = false
