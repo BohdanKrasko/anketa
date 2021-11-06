@@ -1,6 +1,6 @@
 import fetch from 'unfetch';
 
-const url = "http://localhost:8000"
+const url = "https://server.dubr-irc.tk"
 
 const checkStatus = (response) => {
     if(response.ok) {

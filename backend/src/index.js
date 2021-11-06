@@ -15,7 +15,7 @@ const server = Hapi.server({
     host: nconf.get('host'),
     routes: {
         cors: {
-            origin: ["http://localhost:3000", "http://durb-irc.tk", "https://durb-irc.tk"],
+            origin: ["http://dubr-irc.tk", "https://dubr-irc.tk"],
             additionalHeaders: ["Custom"]
         }
     },

@@ -93,6 +93,7 @@ const Admin = (props) => {
     }
 
     const handleRowAdd = async (newData) => {
+        newData.password = newData.pass_star
         //validation
         let errorList = validate(newData)
         if (errorList.length > 0) {
