@@ -1,14 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import { Redirect } from "react-router-dom"
-import { Grid } from "@material-ui/core"
-import RightMenu from '../../Components/menu/RightMenu'
+// import RightMenu from '../../Components/menu/RightMenu'
 import SwipedTable from '../../Components/table/SwipedTable'
 import { deleteAnketa, getAnaketa } from '../../api/client'
+import RightMenuStats from '../../Components/menu/RightMenuStats'
+import { ConfirmProvider } from 'material-ui-confirm'
+import AnketaCard from '../../Components/anketa/AnketaCard'
+import AddAncketa from '../../Components/anketa/AddAnketa'
+
 
 import {
   CssBaseline,
   CircularProgress
 } from '@mui/material';
+
+import { 
+  Grid,
+  Container 
+} from "@material-ui/core";
 
 import { 
   getAnakety, 
@@ -269,18 +278,47 @@ export default function Ankety(props) {
         return (
           <div sx={{ display: 'flex' }}>
           <CssBaseline />
-            <RightMenu
-              open={open}
-              handleDrawerOpen={handleDrawerOpen}
-              handleDrawerClose={handleDrawerClose}
-              anketa={anketa}
-              parents={data}
-              handleDelete={handleDelete}
-              handleOpenChildren={handleOpenChildren}
-              check={check}
-              children={children} 
-            />
+          {/* <RightMenu
+            open={open}
+            handleDrawerOpen={handleDrawerOpen}
+            handleDrawerClose={handleDrawerClose}
+            anketa={anketa}
+            parents={data}
+            handleDelete={handleDelete}
+            handleOpenChildren={handleOpenChildren}
+            check={check}
+            children={children} 
+          /> */}
+
+          <RightMenuStats
+            open={open}
+            handleDrawerOpen={handleDrawerOpen}
+            handleDrawerClose={handleDrawerClose}
+            parents={data}
+          />
           
+          <Container>
+                <Grid container spacing={3}>
+                    {/* Change in the future to check if user admin then show AddAncketa */}
+                    { data.role === 'admin' ? <Grid item key={anketa.anketa_id} xs={12} md={6} lg={4}>
+                        <AddAncketa parents={data}/>
+                    </Grid> : <Grid/>}
+                    {anketa.map(anketa => (
+                      <ConfirmProvider> 
+                        <Grid item key={anketa.anketa_id} xs={12} md={6} lg={4}>
+                            <AnketaCard 
+                              anketa={anketa} 
+                              parents={data} 
+                              handleDelete={handleDelete} 
+                              handleOpenChildren={handleOpenChildren}
+                              check={check}
+                              isNotShowButton={true}
+                            />
+                        </Grid>
+                      </ConfirmProvider>
+                    ))}
+                </Grid>
+            </Container>
          
          <SwipedTable
             container={container}

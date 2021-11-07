@@ -86,7 +86,8 @@ const RightMenuStats = ({
   open, 
   handleDrawerOpen, 
   handleDrawerClose, 
-  parents}) => {
+  parents,
+  isNotShowButton}) => {
   const history = useHistory();  
   const theme = useTheme();
     return (
@@ -94,17 +95,22 @@ const RightMenuStats = ({
             <AppBar position="fixed" open={open}>
             <Toolbar>
               <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-                <Button 
-                  style={{backgroundColor: '#fff', color: 'rgb(145 143 143)'}}
-                  onClick={() => {
-                    history.push({ 
-                        pathname: '/ankety',
-                        state: parents
-                    })
-                }}
-                >
-                  <ArrowBackIosIcon/>
-                </Button>
+                {
+                  !isNotShowButton ?  
+                  <div>
+                    <Button 
+                      style={{backgroundColor: '#fff', color: 'rgb(145 143 143)'}}
+                      onClick={() => {
+                        history.push({ 
+                            pathname: '/ankety',
+                            state: parents
+                        })
+                    }}
+                    >
+                      <ArrowBackIosIcon/>
+                    </Button>
+                  </div> : ''
+                }
               </Typography>
               <IconButton
                 color="inherit"
