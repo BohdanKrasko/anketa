@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `anketa`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `anketa` (
   `anketa_id` int NOT NULL AUTO_INCREMENT,
-  `name_of_anketa` varchar(45) NOT NULL,
-  `category` varchar(45) NOT NULL,
+  `name_of_anketa` longtext NOT NULL,
+  `category` longtext NOT NULL,
   PRIMARY KEY (`anketa_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -49,8 +49,8 @@ DROP TABLE IF EXISTS `children`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `children` (
   `children_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `surname` varchar(45) NOT NULL,
+  `name` longtext NOT NULL,
+  `surname` longtext NOT NULL,
   `birthday` date NOT NULL,
   `weight` int NOT NULL,
   `height` int NOT NULL,
@@ -112,7 +112,7 @@ DROP TABLE IF EXISTS `list_of_answers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `list_of_answers` (
   `list_of_answers_id` int NOT NULL AUTO_INCREMENT,
-  `name_of_answer` varchar(45) NOT NULL,
+  `name_of_answer` longtext NOT NULL,
   `question_id` int NOT NULL,
   PRIMARY KEY (`list_of_answers_id`),
   KEY `to_question_id_from_list_of_answer_idx` (`question_id`),
@@ -139,12 +139,12 @@ DROP TABLE IF EXISTS `parents`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `parents` (
   `parents_id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(45) NOT NULL,
-  `last_name` varchar(45) NOT NULL,
-  `username` varchar(45) NOT NULL,
+  `first_name` longtext NOT NULL,
+  `last_name` longtext NOT NULL,
+  `username` longtext NOT NULL,
   `password` longtext NOT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `role` varchar(45) NOT NULL,
+  `phone` longtext DEFAULT NULL,
+  `role` longtext NOT NULL,
   `token` longtext,
   PRIMARY KEY (`parents_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -169,7 +169,7 @@ DROP TABLE IF EXISTS `question`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `question` (
   `question_id` int NOT NULL AUTO_INCREMENT,
-  `question` varchar(200) NOT NULL,
+  `question` longtext NOT NULL,
   `section_id` int NOT NULL,
   PRIMARY KEY (`question_id`),
   KEY `to_section_id_idx` (`section_id`),
@@ -196,7 +196,7 @@ DROP TABLE IF EXISTS `section`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `section` (
   `section_id` int NOT NULL AUTO_INCREMENT,
-  `name_of_section` varchar(45) NOT NULL,
+  `name_of_section` longtext NOT NULL,
   `anketa_id` int NOT NULL,
   PRIMARY KEY (`section_id`),
   KEY `to_section_idx` (`anketa_id`),
