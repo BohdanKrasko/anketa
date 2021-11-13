@@ -9,7 +9,7 @@ exports.get = async (data) => {
         category: '',
         sections: []
     }
-    await conn.query("SELECT name_of_anketa, category FROM anketa WHERE anketa_id = ?", 
+    await conn().execute("SELECT name_of_anketa, category FROM anketa WHERE anketa_id = ?", 
         [data.anketa_id]).then(data => {
             response.name_of_anketa = data[0][0].name_of_anketa
             response.category = data[0][0].category
@@ -18,7 +18,7 @@ exports.get = async (data) => {
             console.log(err)
             return err;
         })
-     await conn.query("SELECT section_id, name_of_section FROM section WHERE anketa_id = ?",
+     await conn().execute("SELECT section_id, name_of_section FROM section WHERE anketa_id = ?",
         [data.anketa_id]).then( async data => {
             for (const section_k in data[0]) {
                 let section_e = data[0][section_k]
@@ -27,7 +27,7 @@ exports.get = async (data) => {
                     name_of_section: section_e.name_of_section,
                     questions: []
                 }
-                await conn.query("SELECT question_id, question FROM question WHERE section_id = ?", 
+                await conn().execute("SELECT question_id, question FROM question WHERE section_id = ?", 
                     [section_e.section_id]).then(async data => {
                         for (const question_k in data[0]) {
                             let question_e = data[0][question_k]
@@ -37,7 +37,7 @@ exports.get = async (data) => {
                                 question: question_e.question,
                                 answers: []
                             }
-                            await conn.query("SELECT list_of_answers_id, name_of_answer FROM list_of_answers WHERE question_id = ?",
+                            await conn().execute("SELECT list_of_answers_id, name_of_answer FROM list_of_answers WHERE question_id = ?",
                                 [question_e.question_id]).then(data => {
                                     for (const answer_k in data[0]) {
                                         let answer_e = data[0][answer_k]
@@ -68,7 +68,7 @@ exports.get = async (data) => {
 }
 
 exports.create = async (data) => {
-    const anketa_id = await conn.query("INSERT INTO \
+    const anketa_id = await conn().execute("INSERT INTO \
                     anketa (name_of_anketa, category) \
                 VALUES \
                     (?,?);", [data.name_of_anketa, data.category]).then(async (res) => {
@@ -80,7 +80,7 @@ exports.create = async (data) => {
 
     await data.sections.reduce(async (memo, value) => {
         await memo
-        const section_id = await conn.query("INSERT INTO \
+        const section_id = await conn().execute("INSERT INTO \
                         section (name_of_section, anketa_id) \
                     VALUES \
                         (?,?);", [value.name_of_section, anketa_id]).then(sectionRes => {
@@ -92,14 +92,14 @@ exports.create = async (data) => {
 
         await value.questions.reduce(async (memo, value) => {
             await memo;
-            await conn.query("INSERT INTO \
+            await conn().execute("INSERT INTO \
                 question (question, section_id) \
             VALUES \
                 (?,?); \
             ", [value.question, section_id]).then((questionRes) => {
                 const question_id = questionRes[0].insertId;
                 for (const v of value.answers) {
-                    conn.query("INSERT INTO \
+                    conn().execute("INSERT INTO \
                         list_of_answers (name_of_answer, question_id) \
                     VALUES \
                         (?,?)", [v.name_of_answer, question_id]).catch((err) => {
@@ -118,7 +118,7 @@ exports.edit = async (data) => {
     for (const key in data.delete) {
         for (const i in data.delete[key]) {
             const id = key + '_id'
-            await conn.query(`DELETE FROM ${key} WHERE ${id} = ${data.delete[key][i]}`).catch(err => {
+            await conn().execute(`DELETE FROM ${key} WHERE ${id} = ${data.delete[key][i]}`).catch(err => {
                     console.log(err)
                     return err
                 }
@@ -129,7 +129,7 @@ exports.edit = async (data) => {
     const anketa = data
 
     if (anketa.anketa_id) {
-        await conn.query(`UPDATE anketa SET name_of_anketa='${anketa.name_of_anketa}', category='${anketa.category}' WHERE anketa_id = ${anketa.anketa_id}`)
+        await conn().execute(`UPDATE anketa SET name_of_anketa='${anketa.name_of_anketa}', category='${anketa.category}' WHERE anketa_id = ${anketa.anketa_id}`)
             .catch(err => {
                 console.log(err)
                 return err
@@ -140,14 +140,14 @@ exports.edit = async (data) => {
         const section = anketa.sections[k_s]
         let addedSectionId
         if (section.section_id) {
-            await conn.query(`UPDATE section SET name_of_section = '${section.name_of_section}' WHERE section_id = ${section.section_id}`)
+            await conn().execute(`UPDATE section SET name_of_section = '${section.name_of_section}' WHERE section_id = ${section.section_id}`)
                 .catch(err => {
                     console.log(err)
                     return err
                 }
             )
         } else {
-            await conn.query(`INSERT INTO section (name_of_section, anketa_id) VALUES ('${section.name_of_section}', '${anketa.anketa_id}')`)
+            await conn().execute(`INSERT INTO section (name_of_section, anketa_id) VALUES ('${section.name_of_section}', '${anketa.anketa_id}')`)
                 .then(data => {
                     addedSectionId = data[0].insertId
                 })
@@ -162,14 +162,14 @@ exports.edit = async (data) => {
             const question = section.questions[k_q]
             let addedQuestionId
             if (question.question_id) {
-                await conn.query(`UPDATE question SET question = '${question.question}' WHERE question_id = ${question.question_id}`)
+                await conn().execute(`UPDATE question SET question = '${question.question}' WHERE question_id = ${question.question_id}`)
                     .catch(err => {
                         console.log(err)
                         return err
                     }
                 )
             } else {
-                await conn.query(`INSERT INTO question (question, section_id) VALUES ('${question.question}', '${section.section_id || addedSectionId}')`)
+                await conn().execute(`INSERT INTO question (question, section_id) VALUES ('${question.question}', '${section.section_id || addedSectionId}')`)
                     .then(data => {
                         addedQuestionId = data[0].insertId
                     })
@@ -182,14 +182,14 @@ exports.edit = async (data) => {
             for (const k_a in question.answers) {
                 const answer = question.answers[k_a]
                 if (answer.list_of_answers_id) {
-                    await conn.query(`UPDATE list_of_answers SET name_of_answer = '${answer.name_of_answer}' WHERE list_of_answers_id = '${answer.list_of_answers_id}'`)
+                    await conn().execute(`UPDATE list_of_answers SET name_of_answer = '${answer.name_of_answer}' WHERE list_of_answers_id = '${answer.list_of_answers_id}'`)
                         .catch(err => {
                             console.log(err)
                             return err
                         }
                     )
                 } else {
-                    await conn.query(`INSERT INTO list_of_answers (name_of_answer, question_id) VALUES ('${answer.name_of_answer}', '${question.question_id || addedQuestionId}')`)
+                    await conn().execute(`INSERT INTO list_of_answers (name_of_answer, question_id) VALUES ('${answer.name_of_answer}', '${question.question_id || addedQuestionId}')`)
                         .catch(err => {
                             console.log(err)
                             return err
@@ -211,7 +211,7 @@ exports.delete = async (data) => {
             } else {
                 id = key + '_id'
             }
-            await conn.query(`DELETE FROM ${key} WHERE ${id} = ${data.delete[key][i]}`).catch(err => {
+            await conn().execute(`DELETE FROM ${key} WHERE ${id} = ${data.delete[key][i]}`).catch(err => {
                     console.log(err)
                     return err
                 }
@@ -226,7 +226,7 @@ exports.hasAnswers = async (data) => {
     let hasAnswers = false
 
     for (const key in data.check) {
-        await conn.query('SELECT COUNT(1) as exist FROM children_answer WHERE list_of_answer_id = ?',
+        await conn().execute('SELECT COUNT(1) as exist FROM children_answer WHERE list_of_answer_id = ?',
             [data.check[key]]).then(res => {
                 if (res[0][0].exist) {
                     hasAnswers = true

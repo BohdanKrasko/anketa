@@ -4,7 +4,7 @@ const path = require("path");
 const conn = require(path.join(__dirname, "./connection")).db_conn;
 
 exports.get = async (data) => {
-    const result = await conn.query("SELECT \
+    const result = await conn().execute("SELECT \
                             anketa.anketa_id, \
                             anketa.name_of_anketa, \
                             section.section_id, \

@@ -16,6 +16,7 @@ const server = Hapi.server({
     routes: {
         cors: {
             origin: ["https://dubr-irc.tk"],
+            // origin: ["http://localhost"],
             additionalHeaders: ["Custom"]
         }
     },
