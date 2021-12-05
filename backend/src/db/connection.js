@@ -23,3 +23,25 @@ exports.db_conn =  function() {
         console.log(err)
     }
 }
+
+exports.pool = mysql.createPool({
+    host: nconf.get('db:host'),
+    user: nconf.get('db:username'),
+    password: nconf.get('db:password'),
+    database: nconf.get('db:database'),
+    port:  parseInt(nconf.get('db:port')),
+    waitForConnections: true,
+    connectionLimit: 100,
+    queueLimit: 0
+});
+
+// mysql.createPool({
+//     host: nconf.get('db:host'),
+//     user: nconf.get('db:username'),
+//     password: nconf.get('db:password'),
+//     database: nconf.get('db:database'),
+//     port:  parseInt(nconf.get('db:port')),
+//     waitForConnections: true,
+//     connectionLimit: 30,
+//     queueLimit: 0
+// })

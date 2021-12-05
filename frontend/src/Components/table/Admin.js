@@ -17,7 +17,6 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import Alert from '@mui/material/Alert';
-import { useHistory } from "react-router-dom";
 
  
 const tableIcons = {
@@ -49,7 +48,6 @@ const AdminTable = ({
   iserror, 
   errorMessages
 }) => {
-  const history = useHistory();
  
   return (
     <div>

@@ -4,7 +4,7 @@ const path = require("path");
 const conn = require(path.join(__dirname, "./connection")).db_conn;
 
 exports.get = async (data) => {
-    return conn().execute("SELECT children.children_id AS id, children.name, children.surname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children WHERE parents_id = ?",
+    return conn().query("SELECT children.children_id AS id, children.name, children.surname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children WHERE parents_id = ?",
         [data.parents_id]).then((data) => {
             return data[0]
         }).catch(err => {
@@ -14,7 +14,7 @@ exports.get = async (data) => {
 }
 
 exports.getAll = async () => {
-    return conn().execute("SELECT children.children_id, CONCAT(children.name, ' ', children.surname) AS fullname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children")
+    return conn().query("SELECT children.children_id, CONCAT(children.name, ' ', children.surname) AS fullname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children")
         .then((data) => {
             return data[0]
         }).catch(err => {
@@ -24,7 +24,7 @@ exports.getAll = async () => {
 }
 
 exports.getByAnketa = async (data) => {
-    return conn().execute("SELECT \
+    return conn().query("SELECT \
                             children.children_id, \
                             children.name, \
                             children.surname, \
@@ -51,7 +51,7 @@ exports.getByAnketa = async (data) => {
 }
 
 exports.getByAnketaAndParents = async (data) => {
-    return conn().execute("SELECT \
+    return conn().query("SELECT \
                         children.children_id, \
                         children.name, \
                         children.surname, \
@@ -76,7 +76,7 @@ exports.getByAnketaAndParents = async (data) => {
 }
 
 exports.create = async (data) => {
-    return conn().execute("INSERT INTO children (parents_id, name, surname, birthday, weight, height) VALUES (?,?,?,?,?,?)",
+    return conn().query("INSERT INTO children (parents_id, name, surname, birthday, weight, height) VALUES (?,?,?,?,?,?)",
         [ data.parents_id, data.name, data.surname, data.birthday, data.weight, data.height ]).then(data => {
             return data
         }).catch(err => {
@@ -86,7 +86,7 @@ exports.create = async (data) => {
 }
 
 exports.edit = async (data) => {
-    return conn().execute("UPDATE children SET name = ?, surname = ?, birthday = ?, weight = ?, height = ? WHERE children_id = ?",
+    return conn().query("UPDATE children SET name = ?, surname = ?, birthday = ?, weight = ?, height = ? WHERE children_id = ?",
         [data.name, data.surname, data.birthday, data.weight, data.height, data.children_id]).catch(err => {
             console.log(err)
             return err
@@ -94,7 +94,7 @@ exports.edit = async (data) => {
 }
 
 exports.delete = async (data) => {
-    return conn().execute("DELETE FROM children WHERE children_id = ?", [data.children_id]).catch(err => {
+    return conn().query("DELETE FROM children WHERE children_id = ?", [data.children_id]).catch(err => {
         console.log(err)
         return err
     })
