@@ -18,8 +18,8 @@ services:
       - irc_anketa
 
   backend:
-    # image: kraskobohdan/irc:backend
-    build: backend
+    image: kraskobohdan/irc:backend
+    # build: backend
     container_name: backend_anketa
     ports:
       - 8000:8000
@@ -29,16 +29,16 @@ services:
     networks:
       - irc_anketa
 
-  # frontend:
-  #   # image: kraskobohdan/irc:frontend
-  #   build: frontend
-  #   container_name: frontend_anketa
-  #   ports:
-  #     - 81:3000
-  #   depends_on: 
-  #     - backend
-  #   networks:
-  #     - irc_anketa
+  frontend:
+    image: kraskobohdan/irc:frontend
+    # build: frontend
+    container_name: frontend_anketa
+    ports:
+      - 80:3000
+    depends_on: 
+      - backend
+    networks:
+      - irc_anketa
 
 networks:
     irc_anketa:
