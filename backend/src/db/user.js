@@ -72,10 +72,10 @@ exports.putToken = async (data) => {
 
 }
 
-exports.isExists = (data) => {
-    const conn =  await pool.promise().getConnection();
+exports.isExists = async (data) => {
+    const conn = await pool.promise().getConnection();
 
-    const result = conn.query("SELECT count(1) as exist FROM parents where username = ? and parents_id != ?", 
+    const result = await conn.query("SELECT count(1) as exist FROM parents where username = ? and parents_id != ?", 
         [data.username, data.parents_id]).then(res => {
             return {exist: res[0][0].exist}
         }).catch(err => {
@@ -88,10 +88,10 @@ exports.isExists = (data) => {
     return result;
 }
 
-exports.edit = (data) => {
+exports.edit = async (data) => {
     const conn =  await pool.promise().getConnection();
 
-    const result = conn.query("UPDATE parents SET first_name = ?, last_name = ?, username = ?, phone = ? WHERE parents_id = ?", 
+    const result = await conn.query("UPDATE parents SET first_name = ?, last_name = ?, username = ?, phone = ? WHERE parents_id = ?", 
         [data.first_name, data.last_name, data.username, data.phone, data.parents_id]).then((res) => {
             return {status_code: 200}
         }).catch(err => {
