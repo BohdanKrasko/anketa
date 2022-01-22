@@ -1,6 +1,6 @@
 import fetch from 'unfetch';
 
-const url = `http://localhost:4512` 
+const url = `http://localhost:${process.env.REACT_APP_PORT}` 
 // const url = "https://dubr-irc.tk:8000"
 
 const checkStatus = (response) => {
