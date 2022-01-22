@@ -37,7 +37,6 @@ async function build() {
   }
 
 const init = async () => {
-    await build()
     await server.register(Inert)
     await server.register(AuthBearer)
 
@@ -59,6 +58,7 @@ const init = async () => {
     
     await server.start();
     console.log('Server running on %s', server.info.uri);
+    await build()
 };
 
 process.on('unhandledRejection', (err) => {
