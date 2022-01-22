@@ -12,7 +12,7 @@ const jwt = require(path.join(__dirname, './db/jwt.js'));
 nconf.argv().env().file({file: path.join(__dirname, '..', 'config/server.json')});
 
 const server = Hapi.server({
-    port: parseInt(nconf.get('port')),
+    port: parseInt(process.env.PORT || nconf.get('port')),
     host: nconf.get('host'),
     routes: {
         cors: {
