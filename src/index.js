@@ -18,8 +18,8 @@ const server = Hapi.server({
     host: nconf.get('host'),
     routes: {
         cors: {
-            // origin: ["https://dubr-irc.tk"],
-            origin: ["http://localhost:3000"],
+            origin: ["*"],
+            // origin: ["http://localhost:3000"],
             additionalHeaders: ["Custom"]
         },
         files: {
@@ -30,11 +30,11 @@ const server = Hapi.server({
     // routes: { cors: { origin: "ignore" } }
 });
 
-async function build() {
-    const { stdout, stderr } = await exec('cd frontend && REACT_APP_PORT=$PORT && npm install && npm run build && cp -a build/. ../public');
-    console.log('stdout:', stdout);
-    console.log('stderr:', stderr);
-  }
+// async function build() {
+//     const { stdout, stderr } = await exec('cd frontend && REACT_APP_PORT=$PORT && npm install && npm run build && cp -a build/. ../public');
+//     console.log('stdout:', stdout);
+//     console.log('stderr:', stderr);
+//   }
 
 const init = async () => {
     await server.register(Inert)
@@ -58,7 +58,7 @@ const init = async () => {
     
     await server.start();
     console.log('Server running on %s', server.info.uri);
-    await build()
+    // await build()
 };
 
 process.on('unhandledRejection', (err) => {
