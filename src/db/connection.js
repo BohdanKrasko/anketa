@@ -14,6 +14,6 @@ exports.pool = mysql.createPool({
     database: nconf.get('db:database'),
     port:  parseInt(nconf.get('db:port')),
     waitForConnections: true,
-    connectionLimit: 100,
+    connectionLimit: 5,
     queueLimit: 0
 });
