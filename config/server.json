@@ -1,0 +1,14 @@
+{
+    "host": "0.0.0.0",
+    "port": 3000,
+    "db": {
+        "host": "localhost",
+        "username": "user",
+        "database": "anketa",
+        "password": "user",
+        "port": 3306 
+    },
+    "jwt": {
+        "secret_key": "TOKEN_KEY"
+    }
+}
