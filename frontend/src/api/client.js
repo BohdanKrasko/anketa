@@ -1,7 +1,7 @@
 import fetch from 'unfetch';
 
-// const url = "http://localhost:8000"
-const url = "https://dubr-irc.tk:8000"
+const url = "http://localhost:3000"
+// const url = "https://dubr-irc.tk:8000"
 
 const checkStatus = (response) => {
     if(response.ok) {
