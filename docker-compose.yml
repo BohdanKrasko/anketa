@@ -6,7 +6,7 @@ services:
     # image: mysql/mysql-server:latest-aarch64
     container_name: db_anketa
     ports:
-      - 3306
+      - 3306:3306
     volumes:
       - ./db/dump.sql:/docker-entrypoint-initdb.d/anketa.sql
     environment:
@@ -19,6 +19,7 @@ services:
 
   backend:
     image: kraskobohdan/irc:backend
+    # build: backend
     container_name: backend_anketa
     ports:
       - 8000:8000
@@ -30,6 +31,7 @@ services:
 
   frontend:
     image: kraskobohdan/irc:frontend
+    # build: frontend
     container_name: frontend_anketa
     ports:
       - 80:3000

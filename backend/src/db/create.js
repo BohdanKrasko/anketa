@@ -1,9 +1,11 @@
 'use strict'
 
 const path = require("path");
-const conn = require(path.join(__dirname, "./connection")).db_conn;
+const pool = require(path.join(__dirname, "./connection")).pool;
 
 exports.user = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     conn.query("INSERT INTO \
                     user (username,password,name,surname,po_batkovi,age,weight,phone_number,email) \
                 VALUES \
@@ -11,18 +13,26 @@ exports.user = async (data) => {
         [data.username, data.password, data.name, data.surname, data.po_batkovi, data.age, data.weight, data.phone_number, data.email]).catch(err => {
             console.log(err);
         });
+
+    await pool.releaseConnection(conn);
 }
 
 exports.anketa = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     conn.query("INSERT INTO \
                     anketa (name_of_anketa) \
                 VALUES \
                     (?);", [data.name_of_anketa]).catch(err => {
                         console.log(err);
                     })
+
+    await pool.releaseConnection(conn);
 }
 
 exports.section = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     for (const value of data.sections) {
         conn.query("INSERT INTO \
                         section (name_of_section, anketa_id) \
@@ -31,9 +41,13 @@ exports.section = async (data) => {
                             console.log(err);
                         });
     }
+
+    await pool.releaseConnection(conn);
 }
 
 exports.question = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     await data.questions.reduce(async (memo, value) => {
         await memo;
         await conn.query("INSERT INTO \
@@ -54,9 +68,13 @@ exports.question = async (data) => {
                 }
             })       
     }, undefined);
+
+    await pool.releaseConnection(conn);
 }
 
 exports.userAnswer = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     for (const value of data.user_answers) {
         conn.query("INSERT INTO \
             user_answer (user_id, list_of_answer_id) \
@@ -64,4 +82,6 @@ exports.userAnswer = async (data) => {
             console.log(err);
         });
     }
+
+    await pool.releaseConnection(conn);
 }

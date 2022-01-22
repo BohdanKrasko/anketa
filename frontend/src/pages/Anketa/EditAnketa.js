@@ -26,6 +26,7 @@ const EditAnketa = (props) => {
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState()
     const [deleteIteam] = useState({
+        children_answer: [],
         list_of_answers: [],
         question: [],
         section: []
@@ -211,6 +212,7 @@ const EditAnketa = (props) => {
             deleteAnswer.forEach(v => {
                 if (v.list_of_answers_id) {
                     deleteIteam.list_of_answers.push(v.list_of_answers_id)
+                    deleteIteam.children_answer.push(v.list_of_answers_id)
                 }
             })
             setAnswer(newAnswer)

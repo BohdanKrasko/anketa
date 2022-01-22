@@ -152,10 +152,6 @@ const Profile = (props) => {
 
     const handleSubmitPass = (event) => {
         event.preventDefault()
-        const checkPass = {
-            isNewPass: password.new,
-            isConfirmPass: password.confirm,
-        }
 
         if (!password.new) {
             setIsNewPass(true)

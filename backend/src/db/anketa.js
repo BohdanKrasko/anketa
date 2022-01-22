@@ -1,7 +1,8 @@
 'use strict'
 
 const path = require("path");
-const conn = require(path.join(__dirname, "./connection")).db_conn;
+const pool = require(path.join(__dirname, "./connection")).pool;
+
 
 exports.get = async (data) => {
     let response = {
@@ -9,6 +10,9 @@ exports.get = async (data) => {
         category: '',
         sections: []
     }
+
+    const conn =  await pool.promise().getConnection();
+
     await conn.query("SELECT name_of_anketa, category FROM anketa WHERE anketa_id = ?", 
         [data.anketa_id]).then(data => {
             response.name_of_anketa = data[0][0].name_of_anketa
@@ -64,10 +68,15 @@ exports.get = async (data) => {
             console.log(err)
             return err;
         })
+
+    await pool.releaseConnection(conn);
+
     return response
 }
 
 exports.create = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     const anketa_id = await conn.query("INSERT INTO \
                     anketa (name_of_anketa, category) \
                 VALUES \
@@ -111,13 +120,22 @@ exports.create = async (data) => {
         }, undefined);
     }, undefined)
 
+    await pool.releaseConnection(conn);
+
     return {anketa_id: anketa_id}
 }
 
 exports.edit = async (data) => {
+    const conn =  await pool.promise().getConnection();
+    console.log(data)
     for (const key in data.delete) {
         for (const i in data.delete[key]) {
-            const id = key + '_id'
+            let id;
+            if ( key === 'children_answer') {
+                id = 'list_of_answer_id'
+            } else {
+                id = key + '_id'
+            }
             await conn.query(`DELETE FROM ${key} WHERE ${id} = ${data.delete[key][i]}`).catch(err => {
                     console.log(err)
                     return err
@@ -199,10 +217,17 @@ exports.edit = async (data) => {
             }
         }
     }
+
+    await pool.releaseConnection(conn);
+
     return {status_code: 200}
 }
 
 exports.delete = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
+    console.log(data)
+
     for (const key in data.delete) {
         for (const i in data.delete[key]) {
             let id;
@@ -218,11 +243,15 @@ exports.delete = async (data) => {
             )
         }
     }
-    console.log(data)
+
+    await pool.releaseConnection(conn);
+    
     return data
 }
 
 exports.hasAnswers = async (data) => {
+    const conn =  await pool.promise().getConnection();
+
     let hasAnswers = false
 
     for (const key in data.check) {
@@ -236,7 +265,9 @@ exports.hasAnswers = async (data) => {
                 return err
             })
     }
-    console.log(hasAnswers)
+
+    await pool.releaseConnection(conn);
+    
     return {has_answers: hasAnswers}
 }
 

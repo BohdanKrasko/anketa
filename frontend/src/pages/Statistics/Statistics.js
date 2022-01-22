@@ -31,6 +31,11 @@ import {
     getAllChildrenByAnketa,
     getAllChildrenByAnketaAndParent
   } from '../../api/client';
+
+import TreeView from '@mui/lab/TreeView';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import TreeItem from '@mui/lab/TreeItem';
   
 const Statistics = (props) => {
   const data = (props.location && props.location.state) || {};
@@ -181,6 +186,7 @@ const removeDuplicates = (data, key) => {
       getStatistic(request)
         .then(res => res.json())
         .then(res => {
+          console.log(res)
           convertJson(res)
         })
     } 
@@ -202,6 +208,7 @@ const removeDuplicates = (data, key) => {
   }
 
   const convertJson = (array) => {
+
     let data = {
       anketa_id: array[0].anketa_id,
       name_of_anketa: array[0].name_of_anketa,
@@ -210,94 +217,102 @@ const removeDuplicates = (data, key) => {
       parent_first_name: array[0].first_name,
       parent_last_name: array[0].last_name,
       parent_phone: array[0].phone,
-      sections: []
-    }
-    
-
-    for (const k_s in array) {
-      let e_s = array[k_s]
-      let section = {
-        section_id: e_s.section_id,
-        name_of_section: e_s.name_of_section,
-        questions: []
-      }
-      let index = data.sections.findIndex(x => x.section_id === e_s.section_id)
-      if (index === -1) {
-        data.sections.push(section)
-      }
+      answers: []
     }
 
     for (const key in array) {
       let element = array[key]
-      for (const k_q in data.sections) {
-        let e_q = data.sections[k_q]
-        let question = {
-          question_id: element.question_id,
-          question: element.question,
-          parent_id: element.section_id,
-          answers: [
-            {
-              list_of_answers_id: element.list_of_answers_id,
-              name_of_answer: element.name_of_answer,
-              parent: element.question_id
-            }
-          ]
-        }
+      let grouped_answer_by_date = {
+        date: element.date,
+        sections: []
+      } 
 
-        if (e_q.section_id === question.parent_id) {
-          e_q.questions.push(question)
-        }
-      }
-    }
-
-    for (const keySection in anketaCompare.sections) {
-      let elementSection = anketaCompare.sections[keySection]
-      for (const keyQuestion in elementSection.questions) {
-        let elementQuestion = elementSection.questions[keyQuestion]
-        
-        for (const key in data.sections) {
-          let element = data.sections[key]
-          let indexSection = data.sections.findIndex(x => x.section_id === elementSection.section_id)
+      let index = data.answers.find(x => x.date === element.date)
+      if (!index) {
+        // console.log("block")
+        for (const key_1 in array) {
+          let element_1 = array[key_1]
           
-          if (indexSection === -1) {
-            const newSection = {
-              section_id: elementSection.section_id,
-              name_of_section: elementSection.name_of_section,
-              questions: []
-            }
-            data.sections.push(newSection)
+          let section = {
+            section_id: element_1.section_id,
+            name_of_section: element_1.name_of_section,
+            questions: []
           }
-
-          if (element.section_id === elementSection.section_id) {
-            let index = element.questions.findIndex(x => x.question_id === elementQuestion.question_id)
-            if (index === -1) {
-              const newQueston = {
-                question_id: elementQuestion.question_id,
-                question: elementQuestion.question,
+          
+          let index_1 = grouped_answer_by_date.sections.find(x => x.section_id === element_1.section_id)
+          
+          if (grouped_answer_by_date.date === element_1.date && !index_1) {
+            for (const key_2 in array) {
+              let element_2 = array[key_2]
+              let question = {
+                question_id: element_2.question_id,
+                question: element_2.question,
+                parent_id: element_2.section_id,
                 answers: [
                   {
-                    name_of_answer: "Відповідь не дано"
+                    list_of_answers_id: element_2.list_of_answers_id,
+                    name_of_answer: element_2.name_of_answer,
+                    parent_id: element_2.question_id
                   }
                 ]
               }
-              element.questions.push(newQueston)
+              let index_2 = section.questions.find(x => x.question_id === element_2.question_id)
+              if (question.parent_id === section.section_id && grouped_answer_by_date.date === element_2.date && !index_2) {
+                // console.log(element_2)
+                section.questions.push(question)
+              }
             }
+
+            let section_index = anketaCompare.sections.findIndex(x => x.section_id === section.section_id)
+            let diffQuestion = anketaCompare.sections[section_index].questions
+              .filter(({ question_id: id1 }) => !section.questions.some(({ question_id: id2 }) => id2 === id1))
+              .map(x => {
+                // x.questions.map(y => {
+                  x.answers = [{name_of_answer: "Відповідь не дано"}]
+                // })
+                return x
+              })
+
+            for (const key in diffQuestion) {
+              section.questions.push(diffQuestion[key])
+            }
+            
+            grouped_answer_by_date.sections.push(section)
           }
         }
+        let diffSection = anketaCompare.sections
+          .filter(({ section_id: id1 }) => !grouped_answer_by_date.sections.some(({ section_id: id2 }) => id2 === id1))
+          .map(x => {
+            x.questions.map(y => {
+              y.answers = [{name_of_answer: "Відповідь не дано"}]
+            })
+            return x
+          })
+
+        for (const key in diffSection) {
+          grouped_answer_by_date.sections.push(diffSection[key])
+        }
+
+        data.answers.push(grouped_answer_by_date)
         
       }
     }
 
-    for (const keyS in data.sections) {
-      let  count = {}
-      let elementS = data.sections[keyS]
-      for (const keyQ in elementS.questions) {
-        let elementQ = elementS.questions[keyQ]
-        const flag = elementQ.answers[0].name_of_answer
-        count[flag] = elementS.questions.filter(x => x.answers[0].name_of_answer === flag).length
+    for (const key in data.answers) {
+      let element = data.answers[key]
+      for (const keyS in element.sections) {
+        let  count = {}
+        let elementS = element.sections[keyS]
+        for (const keyQ in elementS.questions) {
+          let elementQ = elementS.questions[keyQ]
+          const flag = elementQ.answers[0].name_of_answer
+          count[flag] = elementS.questions.filter(x => x.answers[0].name_of_answer === flag).length
+        }
+        elementS.counts = count
       }
-      elementS.counts = count
     }
+    // console.log('data')
+    // console.log(data)
     setStatistic(data)
   }
 
@@ -336,114 +351,151 @@ if (!isAuthorized) {
     return <Redirect to="/signin"></Redirect>
 } else {
     return (
-        <div> 
-            <RightMenuStats
-                open={open}
-                handleDrawerOpen={handleDrawerOpen}
-                handleDrawerClose={handleDrawerClose}
-                parents={data}
-                // anketa={}
-              />
-            <Box component="form" onSubmit={handleSubmit} id="anketa" noValidate> 
-                <Container>  
-                <Card>
-                    <Grid container spacing={3} key={v4()} direction="row" alignItems="center"> 
-                        <Grid item key={v4()} md={2} lg={2}/>
-                        <Grid item key={v4()} md={4} lg={4}> 
-                          <Autocomplete
-                            value={anketa}
-                            disablePortal
-                            id="combo-box-demo"
-                            options={ankety}
-                            sx={{ marginTop: '40px' }}
-                            onChange={handleChangeAnketa}
-                            renderInput={(params) => 
-                              <TextField 
-                                {...params} 
-                                label="Виберіть анкету" 
-                                helperText="Спершу виберіть анкету"
-                                required
-                                error={error.anketa}
-                              />
-                            }
-                          />
-                        </Grid>
-                        <Grid item key={v4()} md={4} lg={4}> 
-                          <Autocomplete
-                            value={parent}
-                            disablePortal
-                            id="combo-box-demo"
-                            options={parents}
-                            sx={{ marginTop: '20px' }}
-                            onChange={handleChangeParents}
-                            renderInput={(params) => <TextField {...params} label="Виберіть батьків" />}
-                          />
-                        </Grid>
+      <div> 
+          <RightMenuStats
+              open={open}
+              handleDrawerOpen={handleDrawerOpen}
+              handleDrawerClose={handleDrawerClose}
+              parents={data}
+              // anketa={}
+            />
+          <Box component="form" onSubmit={handleSubmit} id="anketa" noValidate> 
+              <Container>  
+              <Card>
+                  <Grid container spacing={3} key={v4()} direction="row" alignItems="center"> 
+                      <Grid item key={v4()} md={2} lg={2}/>
+                      <Grid item key={v4()} md={4} lg={4}> 
+                        <Autocomplete
+                          value={anketa}
+                          disablePortal
+                          id="combo-box-demo"
+                          options={ankety}
+                          sx={{ marginTop: '40px' }}
+                          onChange={handleChangeAnketa}
+                          renderInput={(params) => 
+                            <TextField 
+                              {...params} 
+                              label="Виберіть анкету" 
+                              helperText="Спершу виберіть анкету"
+                              required
+                              error={error.anketa}
+                            />
+                          }
+                        />
+                      </Grid>
+                      <Grid item key={v4()} md={4} lg={4}> 
+                        <Autocomplete
+                          value={parent}
+                          disablePortal
+                          id="combo-box-demo"
+                          options={parents}
+                          sx={{ marginTop: '20px' }}
+                          onChange={handleChangeParents}
+                          renderInput={(params) => <TextField {...params} label="Виберіть батьків" />}
+                        />
+                      </Grid>
 
-                        <Grid item key={v4()} md={2} lg={2}/>
-                        
-                        <Grid item key={v4()} md={2} lg={2}/>
-                        <Grid item key={v4()} md={4} lg={4}> 
-                          <Autocomplete
-                            value={child}
-                            disablePortal
-                            id="combo-box-demo"
-                            options={children}
-                            sx={{ marginBottom: '20px' }}
-                            onChange={handleChangeChild}
-                            renderInput={(params) => 
-                              <TextField 
-                                {...params} 
-                                required 
-                                label="Виберіть дитину"
-                                error={error.child}
-                              />
-                            }
-                          />
-                        </Grid>
-                        <Grid item key={v4()} md={4} lg={4} style={{textAlign: 'center'}}>
-                                <Button 
-                                    variant="contained"
-                                    type="submit"
-                                    size='large'
-                                    fullWidth
-                                    sx={{ marginBottom: '20px' }}
-                                >
-                                    Статистика
-                                </Button>
-                        </Grid>
-                        </Grid>
-                    </Card>
-                </Container>
-                {Array.isArray(statistic.sections) && statistic.sections.length ? 
-                  <Container style={{marginTop: '20px', marginBottom: '30px'}}>  
-                  
-                    <Grid container spacing={3} key={v4()} direction="row" alignItems="center"> 
-                      <Grid item key={v4()} md={12} lg={12} xs={12}>
-                        {
-                          statistic.sections.map(section => {
-                            let questionCount = 0
-                            return (
-                              <Grid item key={v4()} md={12} lg={12} xs={12} style={{marginBottom: '20px'}}>
-                                <Card>
-                                    <Grid item key={v4()} md={12} lg={12} xs={12} style={{backgroundColor: '#e0e0e0'}}>
-                                      <div style={{
-                                        color: 'rgb(145 143 143)',
-                                        paddingTop: '10px',
-                                        paddingBottom: '10px',
-                                        paddingLeft: '10px',
-                                        fontSize: '25px'
-                                      }}>
-                                        {section.name_of_section}
-                                      </div>
-                                    </Grid>
-                                    <Grid item key={v4()} md={12} lg={12} xs={12} 
-                                      style={{
-                                        backgroundColor: '#e0e0e0',
-                                        paddingBottom: '10px',
-                                        paddingLeft: '10px'
-                                      }} 
-                                    >
+                      <Grid item key={v4()} md={2} lg={2}/>
+                      
+                      <Grid item key={v4()} md={2} lg={2}/>
+                      <Grid item key={v4()} md={4} lg={4}> 
+                        <Autocomplete
+                          value={child}
+                          disablePortal
+                          id="combo-box-demo"
+                          options={children}
+                          sx={{ marginBottom: '20px' }}
+                          onChange={handleChangeChild}
+                          renderInput={(params) => 
+                            <TextField 
+                              {...params} 
+                              required 
+                              label="Виберіть дитину"
+                              error={error.child}
+                            />
+                          }
+                        />
+                      </Grid>
+                      <Grid item key={v4()} md={4} lg={4} style={{textAlign: 'center'}}>
+                              <Button 
+                                  variant="contained"
+                                  type="submit"
+                                  size='large'
+                                  fullWidth
+                                  sx={{ marginBottom: '20px' }}
+                              >
+                                  Статистика
+                              </Button>
+                      </Grid>
+                      </Grid>
+                  </Card>
+              </Container>
+              {Array.isArray(statistic.answers) && statistic.answers.length ? 
+              <div>
+                {
+                  statistic.answers.map(answers => {
+                    // console.log('answers')
+                    // console.log(answers)
+                    return (
+                      <div 
+                        key={v4()}
+                        style={{
+                          margin: 'auto',
+                          maxWidth: '70%',
+                          marginTop: '10px'
+                        }}
+                      >
+                        <TreeView
+                          key={v4()}
+                          disabledItemsFocusable={true}
+                          disableSelection={true}
+                          onNodeFocus={() => {}}
+                          defaultCollapseIcon={<ExpandMoreIcon size='large'/>}
+                          defaultExpandIcon={<ChevronRightIcon size='large'/>}
+                      >
+                        <TreeItem nodeId={v4()} label={
+                          <Card>
+                            <Grid item key={v4()} md={12} lg={12} xs={12} style={{backgroundColor: '#1976d2'}}>
+                              <div style={{
+                                color: 'rgb(255 255 255)',
+                                paddingTop: '10px',
+                                paddingBottom: '10px',
+                                paddingLeft: '10px',
+                                fontSize: '25px',
+                              }}>
+                                {answers.date}
+                              </div>
+                            </Grid>
+                          </Card>
+                          }
+                        > 
+                        <Container style={{marginTop: '20px', marginBottom: '30px'}}> 
+                        <Grid container spacing={3} key={v4()} direction="row" alignItems="center"> 
+                          <Grid item key={v4()} md={12} lg={12} xs={12}> 
+                            {
+                              answers.sections.map(section => {
+                                let questionCount = 0
+                                return (
+                                  <Grid item key={v4()} md={12} lg={12} xs={12} style={{marginBottom: '20px'}}>
+                                    <Card>
+                                      <Grid item key={v4()} md={12} lg={12} xs={12} style={{backgroundColor: '#e0e0e0'}}>
+                                        <div style={{
+                                          color: 'rgb(145 143 143)',
+                                          paddingTop: '10px',
+                                          paddingBottom: '10px',
+                                          paddingLeft: '10px',
+                                          fontSize: '25px'
+                                        }}>
+                                          {section.name_of_section}
+                                        </div>
+                                      </Grid>
+                                      <Grid item key={v4()} md={12} lg={12} xs={12} 
+                                        style={{
+                                          backgroundColor: '#e0e0e0',
+                                          paddingBottom: '10px',
+                                          paddingLeft: '10px'
+                                        }} 
+                                      >
                                       {
                                         Object.keys(section.counts).map(count => {
                                           return (
@@ -470,66 +522,71 @@ if (!isAuthorized) {
                                           )
                                         })
                                       }
-                                    </Grid>
-                                  {
-                                    section.questions.map(question => {
-                                      questionCount++
-                                      return (
-                                        <Grid container spacing={3} key={v4()}>
-                                          <Grid item key={v4()} md={12} lg={12} xs={12}>
-                                            <Card>
-                                              <FormControl component="fieldset">
-                                                  <FormLabel component="legend">
-                                                      <Typography variant="h6" gutterBottom component="div" color='inherit' style={{marginLeft: '10px'}}>
-                                                          {questionCount}. {question.question}
-                                                      </Typography>
-                                                  </FormLabel>
-                                                  <RadioGroup
-                                                      aria-label="gender"
-                                                      name="radio-buttons-group"
-                                                      // onChange={handleChange}
-                                                  >
-                                                    {
-                                                      question.answers.map(answer => {
-                                                        return (
-                                                          <FormControlLabel 
-                                                              key={v4()} 
-                                                              value={answer.name_of_answer} 
-                                                              control={<Radio />} 
-                                                              label={answer.name_of_answer} 
-                                                              style={{marginLeft: '20px'}}
-                                                              disabled
-                                                              checked
-                                                              // onChange={() => {
-                                                              //     addValue(data.child.id, answer.list_of_answers_id, question.question_id)
-                                                              // }}
-                                                          />
-                                                        )
-                                                      })
-                                                    }
-                                                </RadioGroup>
-                                              </FormControl>
-                                            </Card>
-                                          </Grid>
-                                        </Grid>
-                                      )
-                                    })
-                                  }
-                                </Card>
-                              </Grid>
-                            )
-                          })
-                        }
-                      </Grid>
-                    </Grid>
-                </Container> : ''
+                                      </Grid>
+                                      {
+                                        section.questions.map(question => {
+                                          questionCount++
+                                          return (
+                                            <Grid container spacing={3} key={v4()}>
+                                              <Grid item key={v4()} md={12} lg={12} xs={12}>
+                                                <Card>
+                                                  <FormControl component="fieldset">
+                                                      <FormLabel component="legend">
+                                                          <Typography variant="h6" gutterBottom component="div" color='inherit' style={{marginLeft: '10px'}}>
+                                                              {questionCount}. {question.question}
+                                                          </Typography>
+                                                      </FormLabel>
+                                                      <RadioGroup
+                                                        aria-label="gender"
+                                                        name="radio-buttons-group"
+                                                      >
+                                                        {
+                                                          question.answers.map(answer => {
+                                                            return (
+                                                              <FormControlLabel 
+                                                                key={v4()} 
+                                                                value={answer.name_of_answer} 
+                                                                control={<Radio />} 
+                                                                label={answer.name_of_answer} 
+                                                                style={{marginLeft: '20px'}}
+                                                                disabled
+                                                                checked
+                                                              />
+                                                            )
+                                                          })
+                                                        }
+                                                    </RadioGroup>
+                                                  </FormControl>
+                                                </Card>
+                                              </Grid>
+                                            </Grid>
+                                          )
+                                        })
+                                      }
+                                    </Card>
+                                  </Grid>
+                                )
+                              })
+                            }
+                          </Grid>
+                        </Grid>
+                      </Container>
+                        </TreeItem>
+                      </TreeView>
+                      <div style={{width: '100px'}}>
+
+                      </div>
+                      </div>
+                    )
+                  })
                 }
-                
-            </Box>
-            
-        </div>
-      );
-    }
+              </div>
+              : ''
+              }
+          </Box>
+      </div>
+    )
+  }
 }
 
 export default Statistics;

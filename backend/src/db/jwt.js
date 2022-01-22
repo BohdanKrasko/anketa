@@ -4,7 +4,6 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const nconf = require('nconf');
-const conn = require(path.join(__dirname, "./connection")).db_conn;
 const user = require(path.join(__dirname, "./user"));
 
 nconf.argv().env().file({file: path.join(__dirname, '..', '..', 'config', 'server.json')});
