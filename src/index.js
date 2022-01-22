@@ -31,7 +31,7 @@ const server = Hapi.server({
 });
 
 async function build() {
-    const { stdout, stderr } = await exec('cd frontend && REACT_APP_PORT=$PORT npm run build && cp -a build/. ../public');
+    const { stdout, stderr } = await exec('cd frontend && REACT_APP_PORT=$PORT && npm install && npm run build && cp -a build/. ../public');
     console.log('stdout:', stdout);
     console.log('stderr:', stderr);
   }
