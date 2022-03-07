@@ -9,7 +9,7 @@ const conn = require(path.join(__dirname, "./connection"));
 exports.get = async (data) => {
     // const conn =  await pool.promise().getConnection();
     
-    const result = await conn
+    const result = await conn.promise()
         .query("SELECT anketa.anketa_id, anketa.name_of_anketa, section.section_id, section.name_of_section, question.question_id, question.question, list_of_answers.list_of_answers_id, list_of_answers.name_of_answer, children_answer.date, children.name, children.surname, parents.first_name, parents.last_name, parents.phone \
             FROM \
                 anketa \
