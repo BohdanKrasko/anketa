@@ -9,7 +9,7 @@ const conn = require(path.join(__dirname, "./connection"));
 exports.get = async (data) => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("SELECT children.children_id AS id, children.name, children.surname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children WHERE parents_id = ?",
+    const result = await conn.promise().query("SELECT children.children_id AS id, children.name, children.surname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children WHERE parents_id = ?",
         [data.parents_id]).then((data) => {
             return data[0]
         }).catch(err => {
@@ -25,7 +25,7 @@ exports.get = async (data) => {
 exports.getAll = async () => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("SELECT children.children_id, CONCAT(children.name, ' ', children.surname) AS fullname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children")
+    const result = await conn.promise().query("SELECT children.children_id, CONCAT(children.name, ' ', children.surname) AS fullname, DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, children.weight, children.height FROM children")
         .then((data) => {
             return data[0]
         }).catch(err => {
@@ -41,7 +41,7 @@ exports.getAll = async () => {
 exports.getByAnketa = async (data) => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("SELECT \
+    const result = await conn.promise().query("SELECT \
                             children.children_id, \
                             children.name, \
                             children.surname, \
@@ -74,7 +74,7 @@ exports.getByAnketa = async (data) => {
 exports.getByAnketaAndParents = async (data) => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("SELECT \
+    const result = await conn.promise().query("SELECT \
                         children.children_id, \
                         children.name, \
                         children.surname, \
@@ -105,7 +105,7 @@ exports.getByAnketaAndParents = async (data) => {
 exports.create = async (data) => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("INSERT INTO children (parents_id, name, surname, birthday, weight, height) VALUES (?,?,?,?,?,?)",
+    const result = await conn.promise().query("INSERT INTO children (parents_id, name, surname, birthday, weight, height) VALUES (?,?,?,?,?,?)",
         [ data.parents_id, data.name, data.surname, data.birthday, data.weight, data.height ]).then(data => {
             return data
         }).catch(err => {
@@ -121,7 +121,7 @@ exports.create = async (data) => {
 exports.edit = async (data) => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("UPDATE children SET name = ?, surname = ?, birthday = ?, weight = ?, height = ? WHERE children_id = ?",
+    const result = await conn.promise().query("UPDATE children SET name = ?, surname = ?, birthday = ?, weight = ?, height = ? WHERE children_id = ?",
         [data.name, data.surname, data.birthday, data.weight, data.height, data.children_id]).catch(err => {
             console.log(err)
             return err
@@ -135,7 +135,7 @@ exports.edit = async (data) => {
 exports.delete = async (data) => {
     // const conn =  await pool.promise().getConnection();
 
-    const result = conn.promise().query("DELETE FROM children WHERE children_id = ?", [data.children_id]).catch(err => {
+    const result = await conn.promise().query("DELETE FROM children WHERE children_id = ?", [data.children_id]).catch(err => {
         console.log(err)
         return err
     })
