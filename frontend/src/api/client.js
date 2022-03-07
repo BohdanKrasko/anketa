@@ -2,6 +2,7 @@ import fetch from 'unfetch';
 
 // const url = `http://localhost:${process.env.REACT_APP_PORT}` 
 const url = "https://dubr-irc.herokuapp.com"
+// const url = "http://localhost:3000"
 
 const checkStatus = (response) => {
     if(response.ok) {

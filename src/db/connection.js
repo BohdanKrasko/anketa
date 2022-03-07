@@ -7,13 +7,25 @@ const path = require("path");
 // create the connection to database
 nconf.argv().env().file({file: path.join(__dirname, '..', '..', 'config/server.json')});
 
-exports.pool = mysql.createPool({
-    host: nconf.get('db:host'),
-    user: nconf.get('db:username'),
-    password: nconf.get('db:password'),
-    database: nconf.get('db:database'),
-    port:  parseInt(nconf.get('db:port')),
-    waitForConnections: true,
-    connectionLimit: 5,
-    queueLimit: 0
+// exports.pool = mysql.createPool({
+//     host: nconf.get('db:host'),
+//     user: nconf.get('db:username'),
+//     password: nconf.get('db:password'),
+//     database: nconf.get('db:database'),
+//     port:  parseInt(nconf.get('db:port')),
+//     waitForConnections: true,
+//     connectionLimit: 5,
+//     queueLimit: 0
+// });
+let connection = mysql.createConnection({
+    host     : nconf.get('db:host'),
+    user     : nconf.get('db:username'),
+    password : nconf.get('db:password'),
+    database : nconf.get('db:database')
 });
+
+connection.connect(function(err) {
+    if (err) throw err;
+});
+
+module.exports = connection;
