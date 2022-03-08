@@ -1,25 +1,27 @@
 'use strict'
 
 const path = require("path");
-// const pool = require(path.join(__dirname, "./connection")).pool;
-const conn = require(path.join(__dirname, "./connection"));
-
+const nconf = require('nconf');
+const pool = require(path.join(__dirname, "./conn")).pool;
+let conn;
 
 exports.create = async (data) => {
-    // const conn =  await pool.promise().getConnection();
+    if (pool._allConnections.length < nconf.get('db:connection_limit')) {
+        conn =  await pool.promise().getConnection();
+        global.conn = conn
+    }
     const children_id = data.answers[0].children_id
     const date = new Date()
 
     for (const key in data.answers) {
         let element = data.answers[key]
-        await await conn.promise().query('INSERT INTO children_answer (children_id, list_of_answer_id, question_id, date) VALUES (?,?,?,?)', 
+        await global.conn.query('INSERT INTO children_answer (children_id, list_of_answer_id, question_id, date) VALUES (?,?,?,?)', 
             [children_id, element.list_of_answers_id, element.question_id, date]).catch(err => {
                 console.log(err)
                 return err;
             })
     }
 
-    // await pool.releaseConnection(conn);
     
     return {status_code: 200}
 }

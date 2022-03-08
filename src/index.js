@@ -8,7 +8,8 @@ const AuthBearer = require('hapi-auth-bearer-token');
 const routes = require(path.join(__dirname, 'routes.js'));
 const jwt = require(path.join(__dirname, './db/jwt.js'));
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+
+global.conn;
 
 
 nconf.argv().env().file({file: path.join(__dirname, '..', 'config/server.json')});
@@ -23,18 +24,12 @@ const server = Hapi.server({
             additionalHeaders: ["Custom"]
         },
         files: {
-            relativeTo: path.join(__dirname, '../public')
+            relativeTo: path.join(__dirname, '../frontend/build')
         }
     },
     // methods: ['DELETE', 'GET', 'POST', 'PUT']
     // routes: { cors: { origin: "ignore" } }
 });
-
-// async function build() {
-//     const { stdout, stderr } = await exec('cd frontend && REACT_APP_PORT=$PORT && npm install && npm run build && cp -a build/. ../public');
-//     console.log('stdout:', stdout);
-//     console.log('stderr:', stderr);
-//   }
 
 const init = async () => {
     await server.register(Inert)

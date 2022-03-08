@@ -110,7 +110,7 @@ export const addAnketa = (data, token) =>
         body: JSON.stringify(data)
     }).then(checkStatus);
 
-export const editAnketa = (data, token) => {
+export const editAnketa = (data, token) => 
     fetch(url + '/api/v1/edit/anketa', {
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -119,7 +119,6 @@ export const editAnketa = (data, token) => {
         method: 'PUT',
         body: JSON.stringify(data)
     }).then(checkStatus);
-}
 
 export const getAnaketa = (data) => 
     fetch(url + `/api/v1/get/anketa/${data.anketa_id}`, {

@@ -249,6 +249,12 @@ export default function Tree({
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            // onClick={() => {
+                            //     history.push({ 
+                            //         pathname: '/ankety',
+                            //         state: data
+                            //     })
+                            // }}
                             size="large"
                         >
                             Зберегти
