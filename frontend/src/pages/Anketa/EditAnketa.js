@@ -89,10 +89,11 @@ const EditAnketa = (props) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const dataJSON = genereteJson()
-        editAnketa(dataJSON, data.token)
-        history.push({ 
-            pathname: '/ankety',
-            state: data
+        editAnketa(dataJSON, data.token).then(() => {
+            history.push({ 
+                pathname: '/ankety',
+                state: data
+            })
         })
     }
 

@@ -6,7 +6,8 @@
         "username": "b99d0cab0cd606",
         "database": "heroku_5ab3ba97eb04520",
         "password": "90c05ec1",
-        "port": 3306 
+        "port": 3306,
+        "connection_limit": 8
     },
     "jwt": {
         "secret_key": "TOKEN_KEY"

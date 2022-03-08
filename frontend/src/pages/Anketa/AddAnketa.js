@@ -83,10 +83,11 @@ const AddAnketa = (props) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const dataJSON = genereteJson()
-        addAnketa(dataJSON, data.token)
-        history.push({ 
-            pathname: '/ankety',
-            state: data
+        addAnketa(dataJSON, data.token).then(() => {
+            history.push({ 
+                pathname: '/ankety',
+                state: data
+            })
         })
     }
     
@@ -195,10 +196,11 @@ const AddAnketa = (props) => {
               <CircularProgress />
             </Grid>
         )
-      }
+    }
     if (!isAuthorized) {
         return <Redirect to="/signin"></Redirect>
-    } else {
+    } 
+    else {
         
         return (
             <div>

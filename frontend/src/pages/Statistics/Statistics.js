@@ -186,7 +186,7 @@ const removeDuplicates = (data, key) => {
       getStatistic(request)
         .then(res => res.json())
         .then(res => {
-          console.log(res)
+          // console.log(res)
           convertJson(res)
         })
     } 
