@@ -1,10 +1,10 @@
 'use strict'
 
-const path = require("path");
-const jwt = require("jsonwebtoken");
+const path   = require("path");
+const nconf  = require('nconf');
 const bcrypt = require("bcryptjs");
-const nconf = require('nconf');
-const user = require(path.join(__dirname, "./user"));
+const jwt    = require("jsonwebtoken");
+const user   = require(path.join(__dirname, "./parents"));
 
 nconf.argv().env().file({file: path.join(__dirname, '..', '..', 'config', 'server.json')});
 
@@ -43,8 +43,8 @@ exports.register = async (data) => {
 
         await user.create(newData);
         await user.putToken({username, token});
-        return {status_code: 200};
 
+        return {status_code: 200};
     } catch (err) {
         console.log(err);
         return err;
@@ -76,13 +76,12 @@ exports.login = async (data) => {
           // user
           return userData;
         } else {
-            return {statusCode: 400, message: "Invalid user or password"}
+            return { statusCode: 400, message: "Invalid user or password" };
         }
-        
-      } catch (err) {
+    } catch (err) {
         console.log(err);
         return err;
-      }
+    }
 }
 
 exports.verifyToken = async (token) => {

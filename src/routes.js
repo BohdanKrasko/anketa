@@ -1,6 +1,6 @@
 'use strict'
 
-const path = require('path');
+const path     = require('path');
 const handlers = require(path.join(__dirname, 'handlers.js')).handlers;
 
 let routes = [
@@ -152,11 +152,6 @@ let routes = [
     },
     {
         method: "GET",
-        path: '/api/v1/get/all/children',
-        config: handlers.v1.get.all.children
-    },
-    {
-        method: "GET",
         path: '/api/v1/get/all/children/anketa/{anketa_id}',
         config: handlers.v1.get.all.childrenByAnketaId
     },
@@ -164,11 +159,6 @@ let routes = [
         method: "GET",
         path: '/api/v1/get/all/children/anketa/{anketa_id}/parent/{parents_id}',
         config: handlers.v1.get.all.childrenByAnketaAndParent
-    },
-    {
-        method: "GET",
-        path: '/api/v1/get/all/parents',
-        config: handlers.v1.get.all.parents
     },
     {
         method: "GET",
@@ -197,11 +187,6 @@ let routes = [
     },
     {
         method: "POST",
-        path: '/api/v1/create/user',
-        config: handlers.v1.create.user
-    },
-    {
-        method: "POST",
         path: '/api/v1/create/children',
         config: handlers.v1.create.children
     },
@@ -209,21 +194,6 @@ let routes = [
         method: "POST",
         path: '/api/v1/create/anketa',
         config: handlers.v1.create.anketa
-    },
-    {
-        method: "POST",
-        path: '/api/v1/create/section',
-        config: handlers.v1.create.section
-    },
-    {
-        method: "POST",
-        path: '/api/v1/create/question',
-        config: handlers.v1.create.question
-    },
-    {
-        method: "POST",
-        path: '/api/v1/create/user_answer',
-        config: handlers.v1.create.user_answer
     },
     {
         method: "POST",
@@ -280,6 +250,6 @@ let routes = [
         path: '/api/v1/delete/admin/{admin_id}',
         config: handlers.v1.delete.admin
     }
-]
+];
 
 exports.routes = routes;
