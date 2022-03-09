@@ -1,23 +1,23 @@
-import React from 'react';
-import { forwardRef } from 'react';
-import MaterialTable from "@material-table/core";
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
-import Alert from '@mui/material/Alert';
-import { useHistory } from "react-router-dom";
+import React from 'react'
+import { forwardRef } from 'react'
+import MaterialTable from "@material-table/core"
+import AddBox from '@material-ui/icons/AddBox'
+import ArrowDownward from '@material-ui/icons/ArrowDownward'
+import Check from '@material-ui/icons/Check'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import ChevronRight from '@material-ui/icons/ChevronRight'
+import Clear from '@material-ui/icons/Clear'
+import DeleteOutline from '@material-ui/icons/DeleteOutline'
+import Edit from '@material-ui/icons/Edit'
+import FilterList from '@material-ui/icons/FilterList'
+import FirstPage from '@material-ui/icons/FirstPage'
+import LastPage from '@material-ui/icons/LastPage'
+import Remove from '@material-ui/icons/Remove'
+import SaveAlt from '@material-ui/icons/SaveAlt'
+import Search from '@material-ui/icons/Search'
+import ViewColumn from '@material-ui/icons/ViewColumn'
+import Alert from '@mui/material/Alert'
+import { useHistory } from "react-router-dom"
 
  
 const tableIcons = {
@@ -38,7 +38,7 @@ const tableIcons = {
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
+}
  
 const Children = ({
   columns, 
@@ -47,59 +47,58 @@ const Children = ({
   handleRowDelete, 
   handleRowAdd, 
   handleRowUpdate, 
-//   selectedAnketa,
   iserror, 
   errorMessages
 }) => {
-  const history = useHistory();
+  const history = useHistory()
  
   return (
     <div>
-            {iserror && 
-              <Alert severity="error">
-                  {errorMessages.map((msg, i) => {
-                      return <div key={i}>{msg}</div>
-                  })}
-              </Alert>
-            }       
-            <MaterialTable mt={90}
-              title="Діти"
-              columns={columns}
-              data={data}
-              icons={tableIcons}
-              options={{
-                search: false,
-                pageSize:6,       // make initial page size
-                emptyRowsWhenPaging: true,   //to make page size fix in case of less data rows
-                pageSizeOptions:[6,12],    // rows selection options
-                actionsColumnIndex: -1
-                }}
-              
-              editable={{
-                onRowUpdate: async (newData, oldData) => {
-                  await handleRowUpdate(newData, oldData)
-                },
-                onRowAdd: async (newData) => {
-                  await handleRowAdd(newData)
-                },
-                onRowDelete: async (oldData) => {
-                  await handleRowDelete(oldData)
-                }
-              }}
-              localization={{
-                header: {
-                    actions: ''
-                },
-                body: {
-                    emptyDataSourceMessage: 'Додайте вашу дитину',
-                    editRow: {
-                      deleteText: 'Ви дійсно бажаєте видалити дані?'
-                    }
-                }
-            }}
-            />
+      {iserror && 
+        <Alert severity="error">
+            {errorMessages.map((msg, i) => {
+                return <div key={i}>{msg}</div>
+            })}
+        </Alert>
+      }       
+      <MaterialTable mt={90}
+        title="Діти"
+        columns={columns}
+        data={data}
+        icons={tableIcons}
+        options={{
+          search: false,
+          pageSize:6,       // make initial page size
+          emptyRowsWhenPaging: true,   //to make page size fix in case of less data rows
+          pageSizeOptions:[6,12],    // rows selection options
+          actionsColumnIndex: -1
+          }}
+        
+        editable={{
+          onRowUpdate: async (newData, oldData) => {
+            await handleRowUpdate(newData, oldData)
+          },
+          onRowAdd: async (newData) => {
+            await handleRowAdd(newData)
+          },
+          onRowDelete: async (oldData) => {
+            await handleRowDelete(oldData)
+          }
+        }}
+        localization={{
+          header: {
+              actions: ''
+          },
+          body: {
+              emptyDataSourceMessage: 'Додайте вашу дитину',
+              editRow: {
+                deleteText: 'Ви дійсно бажаєте видалити дані?'
+              }
+          }
+      }}
+      />
     </div>
-  );
+  )
 }
  
-export default Children;
+export default Children

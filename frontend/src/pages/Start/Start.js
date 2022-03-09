@@ -1,42 +1,38 @@
-import React, {useState} from 'react';
-import logo from '../../img/logo.png';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useState} from 'react'
+import logo from '../../img/logo.png'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   Card,
   CardMedia,
   Alert,
   Button
-} from '@mui/material';
-import { Grid, Typography } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+} from '@mui/material'
+import { Grid, Typography } from "@material-ui/core"
+import { useHistory } from "react-router-dom"
 
 const App = (props) => {
-  const history = useHistory();
+  const history = useHistory()
   const useStyles = makeStyles({
     root: {
-      // maxWidth: 310,
       transition: "transform 0.15s ease-in-out"
     },
     cardHovered: {
       transform: "scale3d(1.05, 1.05, 1)"
     }
-  });
-  const data = (props.location && props.location.state) || {};
-
-  const classes = useStyles();
+  })
+  const data = (props.location && props.location.state) || {}
+  const classes = useStyles()
   const [state, setState] = useState({
     raised:false,
     shadow:1,
   })
-
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     history.push({ 
       pathname: '/ankety',
       state: data
      })
   }
-  
   
   return (
     <Grid
@@ -65,7 +61,7 @@ const App = (props) => {
         </Card>
       </Grid>
     </Grid>
-  );
+  )
 }
 
-export default App;
+export default App

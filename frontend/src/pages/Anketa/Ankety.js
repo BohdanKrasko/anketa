@@ -1,24 +1,19 @@
 import React, {useState, useEffect} from 'react'
 import { Redirect } from "react-router-dom"
-// import RightMenu from '../../Components/menu/RightMenu'
 import SwipedTable from '../../Components/table/SwipedTable'
 import { deleteAnketa, getAnaketa } from '../../api/client'
 import RightMenuStats from '../../Components/menu/RightMenuStats'
 import { ConfirmProvider } from 'material-ui-confirm'
 import AnketaCard from '../../Components/anketa/AnketaCard'
 import AddAncketa from '../../Components/anketa/AddAnketa'
-
-
 import {
   CssBaseline,
   CircularProgress
-} from '@mui/material';
-
+} from '@mui/material'
 import { 
   Grid,
   Container 
-} from "@material-ui/core";
-
+} from "@material-ui/core"
 import { 
   getAnakety, 
   getChildren, 
@@ -26,11 +21,7 @@ import {
   addChildren, 
   editChildren,
   hasAnswersExist 
-} from '../../api/client';
-
-// import { v4 } from 'uuid'
-
-
+} from '../../api/client'
   
 const columns = [
   {title: "id", field: "id", hidden: true},
@@ -42,27 +33,27 @@ const columns = [
 ]
 
 export default function Ankety(props) {
-  let data = (props.location && props.location.state) || {};
-  const { window } = props;
+  let data = (props.location && props.location.state) || {}
+  const { window } = props
   const [open, setOpen] = useState(false)
-  const [isLoading, setLoading] = useState(true);
-  const { parents_id, token } = data;
-  const [useCount] = useState(0);
-  const [anketa, setAnketa] = useState([]);
-  const [openChildrend, setOpenChildrend] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setLoading] = useState(true)
+  const { parents_id, token } = data
+  const [useCount] = useState(0)
+  const [anketa, setAnketa] = useState([])
+  const [openChildrend, setOpenChildrend] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(false)
   const [children, setChildren] = useState([])
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
   const [selectedAnketa, setSelectedAnketa] = useState([])
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
 
   const validate = (data) => {
@@ -88,7 +79,7 @@ export default function Ankety(props) {
   const handleRowUpdate = async (newData, oldData) => {
     //validation
     if (typeof(newData.birthday) === 'string' ) {
-      newData.birthday = new Date(newData.birthday); 
+      newData.birthday = new Date(newData.birthday) 
     }
 
     let errorList = validate(newData)
@@ -100,7 +91,7 @@ export default function Ankety(props) {
     } else { //no error
       editChildren(newData, token)
       .then(() => {
-        let updatedChildrend = [...children];
+        let updatedChildrend = [...children]
         const index = updatedChildrend.findIndex(obj => obj.id === oldData.id)
         updatedChildrend[index] = newData
         setChildren(updatedChildrend)
@@ -126,9 +117,9 @@ export default function Ankety(props) {
       .then(res => res.json())
       .then(res => {
         newData.id = res[0].insertId
-        let dataToAdd = [...children];
-        dataToAdd.push(newData);
-        setChildren(dataToAdd);
+        let dataToAdd = [...children]
+        dataToAdd.push(newData)
+        setChildren(dataToAdd)
         setErrorMessages([])
         setIserror(false)
       })
@@ -154,10 +145,10 @@ export default function Ankety(props) {
     }
 
   const toggleDrawer = (newOpen) => () => {
-      setOpenChildrend(newOpen);
-    };
+      setOpenChildrend(newOpen)
+    }
     
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container = window !== undefined ? () => window().document.body : undefined
 
   const handleDelete = async (anketa_id) => {
       // send request to Delete from DB
@@ -192,7 +183,7 @@ export default function Ankety(props) {
           deleteAnketa(deleteData)
         })
       const newAnakety = anketa.filter(anketa => anketa.anketa_id !== anketa_id )
-      setAnketa(newAnakety);
+      setAnketa(newAnakety)
       
   }
 
@@ -232,9 +223,9 @@ export default function Ankety(props) {
             let preperadData = []
 
             data.forEach((key, val) => {
-              var parts = key.birthday.split('/');
+              var parts = key.birthday.split('/')
               var dateString = parts[2] + '-' + parts[1] + '-' + parts[0] 
-              key.birthday = new Date(dateString); 
+              key.birthday = new Date(dateString) 
               preperadData.push(key)
             })
             setChildren(preperadData)
@@ -248,12 +239,12 @@ export default function Ankety(props) {
           .then(res => res.json())
           .then(anketa => {
               setAnketa(anketa)
-              setIsAuthorized(true);   
-              setLoading(false); 
+              setIsAuthorized(true)   
+              setLoading(false) 
           }).catch(err => {
-              setIsAuthorized(false);
-              setLoading(false); 
-              return err;
+              setIsAuthorized(false)
+              setLoading(false) 
+              return err
           })
       }
       fetchOffsetAnketa(token) 
@@ -261,15 +252,15 @@ export default function Ankety(props) {
 
     if (isLoading) {
         return (
-            <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                direction="column"
-                style={{ minHeight: "100vh" }}
-            >
-              <CircularProgress />
-            </Grid>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            direction="column"
+            style={{ minHeight: "100vh" }}
+          >
+            <CircularProgress />
+          </Grid>
         )
       }
     if (!isAuthorized) {
@@ -278,48 +269,33 @@ export default function Ankety(props) {
         return (
           <div sx={{ display: 'flex' }}>
           <CssBaseline />
-          {/* <RightMenu
-            open={open}
-            handleDrawerOpen={handleDrawerOpen}
-            handleDrawerClose={handleDrawerClose}
-            anketa={anketa}
-            parents={data}
-            handleDelete={handleDelete}
-            handleOpenChildren={handleOpenChildren}
-            check={check}
-            children={children} 
-          /> */}
-
           <RightMenuStats
             open={open}
             handleDrawerOpen={handleDrawerOpen}
             handleDrawerClose={handleDrawerClose}
             parents={data}
           />
-          
           <Container>
-                <Grid container spacing={3}>
-                    {/* Change in the future to check if user admin then show AddAncketa */}
-                    { data.role === 'admin' ? <Grid item key={anketa.anketa_id} xs={12} md={6} lg={4}>
-                        <AddAncketa parents={data}/>
-                    </Grid> : <Grid/>}
-                    {anketa.map(anketa => (
-                      <ConfirmProvider> 
-                        <Grid item key={anketa.anketa_id} xs={12} md={6} lg={4}>
-                            <AnketaCard 
-                              anketa={anketa} 
-                              parents={data} 
-                              handleDelete={handleDelete} 
-                              handleOpenChildren={handleOpenChildren}
-                              check={check}
-                              isNotShowButton={true}
-                            />
-                        </Grid>
-                      </ConfirmProvider>
-                    ))}
-                </Grid>
-            </Container>
-         
+            <Grid container spacing={3}>
+                { data.role === 'admin' ? <Grid item key={anketa.anketa_id} xs={12} md={6} lg={4}>
+                    <AddAncketa parents={data}/>
+                </Grid> : <Grid/>}
+                {anketa.map(anketa => (
+                  <ConfirmProvider> 
+                    <Grid item key={anketa.anketa_id} xs={12} md={6} lg={4}>
+                        <AnketaCard 
+                          anketa={anketa} 
+                          parents={data} 
+                          handleDelete={handleDelete} 
+                          handleOpenChildren={handleOpenChildren}
+                          check={check}
+                          isNotShowButton={true}
+                        />
+                    </Grid>
+                  </ConfirmProvider>
+                ))}
+            </Grid>
+          </Container>
          <SwipedTable
             container={container}
             openChildrend={openChildrend}

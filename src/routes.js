@@ -1,7 +1,7 @@
 'use strict'
 
-const path     = require('path');
-const handlers = require(path.join(__dirname, 'handlers.js')).handlers;
+const path     = require('path')
+const handlers = require(path.join(__dirname, 'handlers.js')).handlers
 
 let routes = [
     {
@@ -250,6 +250,6 @@ let routes = [
         path: '/api/v1/delete/admin/{admin_id}',
         config: handlers.v1.delete.admin
     }
-];
+]
 
-exports.routes = routes;
+exports.routes = routes

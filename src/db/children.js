@@ -1,15 +1,15 @@
 'use strict'
 
-const path  = require("path");
-const nconf = require('nconf');
-const pool  = require(path.join(__dirname, "./conn")).pool;
+const path  = require("path")
+const nconf = require('nconf')
+const pool  = require(path.join(__dirname, "./conn")).pool
 
-let conn;
+let conn
 
 exports.getByParenets = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
 
     const result = global.conn
@@ -25,45 +25,20 @@ exports.getByParenets = async (data) => {
                 WHERE \
                     parents_id = ?", [ data.parents_id ])
         .then(data => {
-            return data[0];
+            return data[0]
         })
         .catch(err => {
-            console.log(err);
-            return err;
-        });
+            console.log(err)
+            return err
+        })
 
-    return result;
+    return result
 }
-
-// exports.getAll = async () => {
-//     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-//         conn =  await pool.promise().getConnection();
-//         global.conn = conn;
-//     }
-
-//     const result = global.conn
-//         .query("SELECT \
-//                     children.children_id, \
-//                     CONCAT(children.name, ' ', children.surname) AS fullname, \
-//                     DATE_FORMAT(children.birthday, '%d/%m/%Y') AS birthday, \
-//                     children.weight, \
-//                     children.height \
-//                 FROM \
-//                     children")
-//         .then(data => {
-//             return data[0];
-//         }).catch(err => {
-//             console.log(err);
-//             return err;
-//         });
-
-//     return result;
-// }
 
 exports.getByAnketa = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
 
     const result = global.conn
@@ -92,16 +67,16 @@ exports.getByAnketa = async (data) => {
                 ORDER BY \
                     children.children_id", [ data.anketa_id ])
         .then(res => {
-            return res[0];
-        });
+            return res[0]
+        })
 
-    return result;
+    return result
 }
 
 exports.getByAnketaAndParents = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
 
     const result = global.conn
@@ -126,16 +101,16 @@ exports.getByAnketaAndParents = async (data) => {
                 GROUP BY children.children_id \
                 ORDER BY children.children_id", [ data.anketa_id, data.parents_id ])
         .then(res => {
-            return res[0];
-        });
+            return res[0]
+        })
 
-    return result;
+    return result
 }
 
 exports.create = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
 
     const result = global.conn
@@ -144,19 +119,19 @@ exports.create = async (data) => {
                 VALUES \
                     (?,?,?,?,?,?)", [ data.parents_id, data.name, data.surname, data.birthday, data.weight, data.height ])
         .then(data => {
-            return data;
+            return data
         }).catch(err => {
-            console.log(err);
-            return err;
-        });
+            console.log(err)
+            return err
+        })
 
-    return result;
+    return result
 }
 
 exports.edit = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
 
     const result = global.conn
@@ -171,17 +146,17 @@ exports.edit = async (data) => {
                 WHERE \
                     children_id = ?", [ data.name, data.surname, data.birthday, data.weight, data.height, data.children_id ])
         .catch(err => {
-            console.log(err);
-            return err;
-        });
+            console.log(err)
+            return err
+        })
 
-    return result;
+    return result
 }
 
 exports.delete = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
 
     const result = global.conn
@@ -190,9 +165,9 @@ exports.delete = async (data) => {
                 WHERE \
                     children_id = ?", [ data.children_id ])
         .catch(err => {
-            console.log(err);
-            return err;
-        });
+            console.log(err)
+            return err
+        })
 
-    return result;
+    return result
 }

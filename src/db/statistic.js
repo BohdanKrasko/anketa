@@ -1,15 +1,15 @@
 'use strict'
 
-const path  = require("path");
-const nconf = require('nconf');
-const pool  = require(path.join(__dirname, "./conn")).pool;
+const path  = require("path")
+const nconf = require('nconf')
+const pool  = require(path.join(__dirname, "./conn")).pool
 
-let conn;
+let conn
 
 exports.get = async (data) => {
     if (pool._allConnections.length < nconf.get('db:connection_limit')) {
-        conn =  await pool.promise().getConnection();
-        global.conn = conn;
+        conn =  await pool.promise().getConnection()
+        global.conn = conn
     }
     
     const result = await global.conn
@@ -47,12 +47,12 @@ exports.get = async (data) => {
                 ORDER BY \
                     children_answer.date", [ data.anketa_id, data.children_id ])
         .then(res => {
-            return res[0];
+            return res[0]
         }).catch(err => {
-            console.log(err);
-            return err;
-        });
+            console.log(err)
+            return err
+        })
 
-    return result;
+    return result
 }
 
