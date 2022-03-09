@@ -1,7 +1,7 @@
 import {
   BrowserRouter as Router,
   Route 
-} from 'react-router-dom';
+} from 'react-router-dom'
 import Start from '../pages/Start/Start'
 import SignIn from '../pages/SingIn/SignIn'
 import SignUp from '../pages/SingUp/SignUp'
@@ -29,7 +29,7 @@ function App() {
       <Route exact path="/profile" component={Profile}></Route>
       <Route exact path="/dashboard/admin" component={Admin}></Route>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

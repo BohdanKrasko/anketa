@@ -1,12 +1,12 @@
 'use strict'
 
-const mysql = require('mysql2');
-const nconf = require('nconf');
-const path = require("path");
+const path = require("path")
+const nconf = require('nconf')
+const mysql = require('mysql2')
+
+nconf.argv().env().file({file: path.join(__dirname, '..', '..', 'config/server.json')})
 
 // create the connection to database
-nconf.argv().env().file({file: path.join(__dirname, '..', '..', 'config/server.json')});
-
 exports.pool = mysql.createPool({
     host: nconf.get('db:host'),
     user: nconf.get('db:username'),
@@ -16,12 +16,4 @@ exports.pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: nconf.get('db:connection_limit'),
     queueLimit: 0
-});
-
-// exports.conn = async () =>  { 
-//     const result = await pool.promise().getConnection();
-//     console.log("result")
-//     console.log(pool._allConnections.length);
-//     console.log("result")
-//     return result;
-// };
+})

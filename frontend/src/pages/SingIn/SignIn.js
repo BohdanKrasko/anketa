@@ -1,18 +1,18 @@
-import React, {useState} from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
-import Collapse from '@mui/material/Collapse';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { login } from '../../api/client';
-import { useHistory } from "react-router-dom";
+import React, {useState} from 'react'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import TextField from '@mui/material/TextField'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { login } from '../../api/client'
+import { useHistory } from "react-router-dom"
 
 function Copyright(props) {
   return (
@@ -24,48 +24,45 @@ function Copyright(props) {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  );
+  )
 }
 
-const theme = createTheme();
+const theme = createTheme()
 
 const SignIn = (props) => {
-  const history = useHistory();
-
+  const history = useHistory()
   const [state, setState] = useState({
     username: false,
     password: false,
     onFailure: false
-  });
+  })
 
   const handleInputChange = (name, value) => {
     setState((prevState) => ({
       ...prevState,
       [name]: value
-    }));
-  };
+    }))
+  }
 
   const checkFields = (user) => {
     for (const val in user) {
       if (!user[val]) {
         handleInputChange(val, true)
-        return false;
+        return false
       } else {
         handleInputChange(val, false)
       }
     }
-    return true;
+    return true
   }
   
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    
-    // eslint-disable-next-line no-console
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
     const user = {
       username: data.get('username'),
       password: data.get('password'),
-    };
+    }
     if (checkFields(user)) {
       login(user)
         .then(response => response.json())
@@ -143,7 +140,7 @@ const SignIn = (props) => {
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
-  );
+  )
 }
 
 export default SignIn

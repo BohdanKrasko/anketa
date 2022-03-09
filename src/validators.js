@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const Joi = require('joi');
+const Joi = require('joi')
 
 const validators = {
     v1: {
@@ -16,6 +16,6 @@ const validators = {
             password: Joi.string().required(),
         })
     }
-};
+}
 
-exports.validators = validators;
+exports.validators = validators

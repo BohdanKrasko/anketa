@@ -1,34 +1,24 @@
 'use strict'
-const path = require("path");
-const create = require(path.join(__dirname, "./db/create"));
-const children = require(path.join(__dirname, "./db/children"));
-const anketa = require(path.join(__dirname, "./db/anketa"));
-const answer = require(path.join(__dirname, "./db/answer"))
-const parents = require(path.join(__dirname, "./db/user"))
-const statistic = require(path.join(__dirname, "./db/statistic"))
-const get = require(path.join(__dirname, "./db/get"));
-const jwt = require(path.join(__dirname, "./db/jwt"));
-const validators = require(path.join(__dirname, 'validators.js')).validators;
+
+const path       = require("path")
+const children   = require(path.join(__dirname, "./db/children"))
+const anketa     = require(path.join(__dirname, "./db/anketa"))
+const answer     = require(path.join(__dirname, "./db/answer"))
+const parents    = require(path.join(__dirname, "./db/parents"))
+const statistic  = require(path.join(__dirname, "./db/statistic"))
+const jwt        = require(path.join(__dirname, "./db/jwt"))
+const validators = require(path.join(__dirname, 'validators.js')).validators
 
 let handlers = {
     v1: {
         get: {
             all: {
-                children: {
-                    handler: async (request, reply) => {
-                        return children.getAll().then(res => {
-                            return reply.response(res)
-                        })
-                    },
-                    auth: {
-                        strategy: 'jwt'
-                    }
-                },
                 childrenByAnketaId: {
                     handler: async (request, reply) => {
                         const data = {
                             anketa_id: request.params.anketa_id
                         }
+
                         return children.getByAnketa(data).then(res => {
                             return reply.response(res)
                         })
@@ -43,17 +33,8 @@ let handlers = {
                             anketa_id: request.params.anketa_id,
                             parents_id: request.params.parents_id
                         }
+
                         return children.getByAnketaAndParents(data).then(res => {
-                            return reply.response(res)
-                        })
-                    },
-                    auth: {
-                        strategy: 'jwt'
-                    }
-                },
-                parents: {
-                    handler: async (request, reply) => {
-                        return parents.getAll().then(res => {
                             return reply.response(res)
                         })
                     },
@@ -74,7 +55,7 @@ let handlers = {
             },
             test: {
                 handler: async (request, reply) => {
-                    return "anketa";
+                    return "anketa"
                 },
                 // auth: {
                 //     strategy: 'jwt'
@@ -85,19 +66,19 @@ let handlers = {
                     const data = {
                         anketa_id: request.params.anketa_id
                     }
-                    return anketa.get(data).then(data => {
-                        return reply.response(data);
-                    });
+                    return anketa.getById(data).then(data => {
+                        return reply.response(data)
+                    })
                 },
-                // auth: {
-                //     strategy: 'jwt'
-                // }
+                auth: {
+                    strategy: 'jwt'
+                }
             },
             ankety: {
                 handler: async (request, reply) => {
-                    return get.anketa().then(data => {
-                        return reply.response(data);
-                    });
+                    return anketa.getAll().then(data => {
+                        return reply.response(data)
+                    })
                 },
                 auth: {
                     strategy: 'jwt'
@@ -108,8 +89,9 @@ let handlers = {
                     const data = {
                         "parents_id": request.params.parents_id
                     }
-                    return children.get(data).then(data => {
-                        return reply.response(data);
+
+                    return children.getByParenets(data).then(data => {
+                        return reply.response(data)
                     })
                 },
                 auth: {
@@ -122,6 +104,7 @@ let handlers = {
                         anketa_id: request.params.anketa_id,
                         children_id: request.params.children_id
                     }
+
                     return statistic.get(data).then(data => {
                         return reply.response(data)
                     })
@@ -133,6 +116,7 @@ let handlers = {
             userByUsername: {
                 handler: async (request, reply) => {
                     const username = request.params.username
+
                     return parents.findByUsername(username).then(data => {
                         return reply.response(data)
                     })
@@ -154,14 +138,15 @@ let handlers = {
                     "password"    : request.payload.password,
                     "phone"       : request.payload.phone
                 }
+
                 return jwt.register(data).then((data) => {
-                    return reply.response(data);
-                });
+                    return reply.response(data)
+                })
             },
             validate: {
                 payload: validators.v1.register,
                 failAction: async (request, reply, err) => {
-                    throw err;
+                    throw err
                 }
             }
         },
@@ -174,9 +159,10 @@ let handlers = {
                     "username"    : request.payload.username,
                     "password"    : request.payload.password
                 }
+
                 return jwt.login(data).then((data) => {
-                    return reply.response(data);
-                });
+                    return reply.response(data)
+                })
             }
         },
         create: {
@@ -191,29 +177,9 @@ let handlers = {
                         username: request.payload.username,
                         password: request.payload.password
                     }
+
                     return parents.addAdmin(data).then(res => {
                         return reply.response(res)
-                    })
-                }
-            },
-            user: {
-                payload: {
-                    multipart: true
-                },
-                handler: async (request, reply) => {
-                    const data = {
-                        "username"    : request.payload.username,
-                        "password"    : request.payload.password,
-                        "name"        : request.payload.name,
-                        "surname"     : request.payload.surname,
-                        "po_batkovi"  : request.payload.po_batkovi,
-                        "birthday"    : request.payload.birthday,
-                        "weight"      : request.payload.weight,
-                        "phone_number": request.payload.phone_number,
-                        "email"       : request.payload.email
-                    }
-                    return create.user(data).then(() => {
-                        return reply.response({status_code: 200});
                     })
                 }
             },
@@ -230,8 +196,9 @@ let handlers = {
                         "weight": request.payload.weight,
                         "height": request.payload.height,
                     }
+
                     return children.create(data).then(data => {
-                        return reply.response(data);
+                        return reply.response(data)
                     })
                 },
                 auth: {
@@ -248,8 +215,9 @@ let handlers = {
                         "category": request.payload.category,
                         "sections": request.payload.sections,
                     }
+
                     return anketa.create(data).then((res) => {
-                        return reply.response(res);
+                        return reply.response(res)
                     })
                 },
                 auth: {
@@ -272,45 +240,6 @@ let handlers = {
                 auth: {
                     strategy: 'jwt'
                 }
-            },
-            section: {
-                payload: {
-                    multipart: true
-                },
-                handler: async (request, reply) => {
-                    const data = {
-                        "sections": request.payload.sections
-                    }
-                    return create.section(data).then(() => {
-                        return reply.response({status_code: 200});
-                    })
-                }
-            },
-            question: {
-                payload: {
-                    multipart: true
-                },
-                handler: async (request, reply) => {
-                    const data = {
-                        "questions": request.payload.questions
-                    }
-                    return create.question(data).then(() => {
-                        return reply.response({status_code: 200});
-                    })
-                }
-            },
-            user_answer: {
-                payload: {
-                    multipart: true
-                },
-                handler: async (request, reply) => {
-                    const data = {
-                        "user_answers": request.payload.user_answers
-                    }
-                    return create.userAnswer(data).then(() => {
-                        return reply.response({status_code: 200});
-                    })
-                }
             }
         },
         edit: {
@@ -326,6 +255,7 @@ let handlers = {
                         username: request.payload.username,
                         password: request.payload.password
                     }
+
                     return parents.editAdmin(data).then(res => {
                         return reply.response(res)
                     })
@@ -344,8 +274,9 @@ let handlers = {
                         "weight": request.payload.weight,
                         "height": request.payload.height,
                     }
+
                     return children.edit(data).then(() => {
-                        return reply.response({status_code: 200});
+                        return reply.response({status_code: 200})
                     })
                 },
                 auth: {
@@ -365,6 +296,7 @@ let handlers = {
                         sections: request.payload.sections,
                         delete: request.payload.delete
                     }
+
                     return anketa.edit(data).then((data) => {
                         return reply.response(data)
                     })
@@ -403,6 +335,7 @@ let handlers = {
                         parents_id: request.payload.parents_id,
                         password: request.payload.password
                     }
+
                     return parents.editPassword(data).then(res => {
                         return reply.response(res)
                     })
@@ -435,8 +368,9 @@ let handlers = {
                     const data = {
                         "children_id": request.params.children_id
                     }
+
                     return children.delete(data).then(() => {
-                        return reply.response({status_code: 200});
+                        return reply.response({status_code: 200})
                     })
                 },
                 auth: {
@@ -452,6 +386,7 @@ let handlers = {
                         anketa_id: request.params.anketa_id,
                         delete: request.payload.delete
                     }
+
                     return anketa.delete(data).then((data) => {
                         return reply.response(data)
                     })
@@ -470,6 +405,7 @@ let handlers = {
                     let data = {
                         check: request.payload.check
                     }
+
                     return anketa.hasAnswers(data).then(res => {
                         return reply.response(res)
                     })
@@ -484,6 +420,7 @@ let handlers = {
                         parents_id: request.params.parents_id,
                         username: request.params.username
                     }
+
                     return parents.isExists(data).then(res => {
                         return reply.response(res)
                     })
@@ -496,4 +433,4 @@ let handlers = {
     }
 }
 
-exports.handlers = handlers;
+exports.handlers = handlers

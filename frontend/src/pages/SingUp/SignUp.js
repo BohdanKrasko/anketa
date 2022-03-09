@@ -1,17 +1,17 @@
-import React, {useState} from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button'; 
-import Alert from '@mui/material/Alert';
-import Collapse from '@mui/material/Collapse';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { register } from '../../api/client';
+import React, {useState} from 'react'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button' 
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
+import CssBaseline from '@mui/material/CssBaseline'
+import TextField from '@mui/material/TextField'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { register } from '../../api/client'
 
 function Copyright(props) {
   return (
@@ -23,12 +23,10 @@ function Copyright(props) {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  );
+  )
 }
 
-const theme = createTheme();
-
-
+const theme = createTheme()
 
 const SignUp = (props) => {
   const [state, setState] = useState({
@@ -40,14 +38,15 @@ const SignUp = (props) => {
     isSuccess: false,
     isAlert: false,
     phoneComment: ""
-  });
+  })
 
   const handleInputChange = (name, value) => {
     setState((prevState) => ({
       ...prevState,
       [name]: value
-    }));
-  };
+    }))
+  }
+
   const checkFields = (user) => {
     if (user.isPhone.length < 13 || user.isPhone.length > 13 || user.isPhone.substring(1,13).match(/^[0-9]+$/) === null) {
       setState({phoneComment: "Неправильний номер", isPhone: true})
@@ -57,25 +56,24 @@ const SignUp = (props) => {
     for (const val in user) {
       if (!user[val]) {
         handleInputChange(val, true)
-        return false;
+        return false
       } else {
         handleInputChange(val, false)
       }
     }
-    return true;
+    return true
   }
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
     const user = {
       firstName : data.get('first_name'),
       lastName  : data.get('last_name'),
       username  : data.get('username'),
       password  : data.get('password'),
       phone     : data.get('phone')
-    };
+    }
 
     const checkUser = {
       isFirstName : user.firstName,
@@ -98,7 +96,7 @@ const SignUp = (props) => {
         console.log("err" + err.message)
       })
     }
-  };
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -203,7 +201,7 @@ const SignUp = (props) => {
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
-  );
+  )
 }
 
 export default SignUp
