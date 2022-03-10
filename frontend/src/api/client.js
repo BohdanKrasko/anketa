@@ -1,7 +1,7 @@
 import fetch from 'unfetch'
 
-const url = "https://dubr-irc.herokuapp.com"
-// const url = "http://localhost:3000"
+const url = "https://dubr-irc.herokuapp.com" // use in prod env
+// const url = "http://localhost:3000" // use it in local env
 
 const checkStatus = (response) => {
   if(response.ok) {
