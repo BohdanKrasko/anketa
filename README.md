@@ -3,9 +3,9 @@
 You have to launch the MySQL DB container. There is a docker-compose.yaml file that contains all required configurations. 
 Helpful command to manage MySQL DB:
 ```
-docker-compose up -d # launch db conatiner
-docker-compose stop # stop db conatiner
-docker-compose down # destroy db conatiner
+docker-compose up -d #launch db conatiner
+docker-compose stop #stop db conatiner
+docker-compose down #destroy db conatiner
 ```  
 Database and tables will create automatically once the container is running. There is a file db/anketa.sql that contains a dump of anketa database. It means if you accidentally deleted some tables you can simply recreate the DB container.
 ## Frontend
