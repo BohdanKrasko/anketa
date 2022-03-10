@@ -81,7 +81,7 @@ const RightMenuStats = ({
   handleDrawerOpen, 
   handleDrawerClose, 
   parents,
-  isNotShowButton}) => {
+  isShowButton}) => {
   const history = useHistory()  
   const theme = useTheme()
     return (
@@ -90,7 +90,7 @@ const RightMenuStats = ({
         <Toolbar>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
             {
-              !isNotShowButton ?  
+              isShowButton ?  
               <div>
                 <Button 
                   style={{backgroundColor: '#fff', color: 'rgb(145 143 143)'}}

@@ -274,6 +274,7 @@ export default function Ankety(props) {
             handleDrawerOpen={handleDrawerOpen}
             handleDrawerClose={handleDrawerClose}
             parents={data}
+            isShowButton={false}
           />
           <Container>
             <Grid container spacing={3}>
@@ -289,7 +290,6 @@ export default function Ankety(props) {
                           handleDelete={handleDelete} 
                           handleOpenChildren={handleOpenChildren}
                           check={check}
-                          isNotShowButton={true}
                         />
                     </Grid>
                   </ConfirmProvider>

@@ -247,6 +247,7 @@ const Profile = (props) => {
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerClose={handleDrawerClose}
           parents={data}
+          isShowButton={true}
         />
         <Box component="form" onSubmit={handleSubmit} id="profile" noValidate> 
           <Container> 

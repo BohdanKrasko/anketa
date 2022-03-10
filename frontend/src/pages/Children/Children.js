@@ -174,6 +174,7 @@ const Children = (props) => {
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerClose={handleDrawerClose}
           parents={data}
+          isShowButton={true}
         />
         <ChildrenTable 
           columns={columns} 

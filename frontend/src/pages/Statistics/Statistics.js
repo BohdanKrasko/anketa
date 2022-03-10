@@ -346,6 +346,7 @@ if (!isAuthorized) {
             handleDrawerOpen={handleDrawerOpen}
             handleDrawerClose={handleDrawerClose}
             parents={data}
+            isShowButton={true}
           />
         <Box component="form" onSubmit={handleSubmit} id="anketa" noValidate> 
             <Container>  

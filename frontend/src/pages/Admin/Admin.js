@@ -191,6 +191,7 @@ const Admin = (props) => {
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerClose={handleDrawerClose}
           parents={data}
+          isShowButton={true}
         />
         <AdminTable 
           columns={columns} 
