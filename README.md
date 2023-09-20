@@ -1,7 +1,6 @@
 # How to run it local
 ## Database
-You have to launch the MySQL DB container. There is a docker-compose.yaml file that contains all required configurations. 
-Helpful command to manage MySQL DB:
+Please run docker-compose command to run the app
 ```
 docker-compose up --build #launch db conatiner
 docker-compose stop #stop db conatiner
