@@ -1,6 +1,6 @@
 # How to run it local
 ## Database
-Please run docker-compose command to run the app
+Please run docker-compose command to launch the app
 ```
 docker-compose up --build #launch app
 docker-compose stop #stop app
