@@ -2,9 +2,9 @@
 ## Database
 Please run docker-compose command to run the app
 ```
-docker-compose up --build #launch db conatiner
-docker-compose stop #stop db conatiner
-docker-compose down #destroy db conatiner
+docker-compose up --build #launch app
+docker-compose stop #stop app
+docker-compose down #destroy app
 ```  
 Database and tables will create automatically once the container is running. There is a file db/anketa.sql that contains a dump of anketa database. It means if you accidentally deleted some tables you can simply recreate the DB container.
 ## Frontend
