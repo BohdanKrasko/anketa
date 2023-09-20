@@ -10,6 +10,7 @@ RUN npm install
 
 COPY src src/
 COPY config/server.json config/server.json 
+COPY frontend/build frontend/build
 
 EXPOSE 3000
 

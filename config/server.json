@@ -2,10 +2,10 @@
     "host": "0.0.0.0",
     "port": 3000,
     "db": {
-        "host": "eu-cdbr-west-02.cleardb.net",
-        "username": "b99d0cab0cd606",
-        "database": "heroku_5ab3ba97eb04520",
-        "password": "90c05ec1",
+        "host": "mysql",
+        "username": "user",
+        "database": "anketa",
+        "password": "user",
         "port": 3306,
         "connection_limit": 8
     },

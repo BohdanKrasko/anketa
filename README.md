@@ -3,7 +3,7 @@
 You have to launch the MySQL DB container. There is a docker-compose.yaml file that contains all required configurations. 
 Helpful command to manage MySQL DB:
 ```
-docker-compose up -d #launch db conatiner
+docker-compose up --build #launch db conatiner
 docker-compose stop #stop db conatiner
 docker-compose down #destroy db conatiner
 ```  

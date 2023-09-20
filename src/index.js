@@ -15,10 +15,10 @@ const server = Hapi.server({
     port: parseInt(process.env.PORT || nconf.get('port')),
     host: nconf.get('host'),
     routes: {
-        cors: {
-            origin: ["*"],
-            additionalHeaders: ["Custom"]
-        },
+        // cors: {
+        //     origin: ["*"],
+        //     additionalHeaders: ["Custom"]
+        // },
         files: {
             relativeTo: path.join(__dirname, '../frontend/build')
         }
